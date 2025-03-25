@@ -1,0 +1,44 @@
+{
+	"name": "mcp-hevy",
+	"version": "1.0.0",
+	"main": "dist/index.js",
+	"module": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"files": ["dist", "README.md"],
+	"access": "public",
+	"bin": {
+		"mcp-server-cloudflare": "dist/index.js"
+	},
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"export-specs": "node ./scripts/export-openapi-spec.js",
+		"build": "tsup",
+		"start": "node dist/index.js",
+		"dev": "tsx watch --clear-screen=false src/index.ts",
+		"check": "biome check --fix "
+	},
+	"type": "module",
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"description": "",
+	"dependencies": {
+		"@dotenvx/dotenvx": "^1.39.0",
+		"@microsoft/kiota-abstractions": "1.0.0-preview.90",
+		"@microsoft/kiota-authentication-azure": "1.0.0-preview.90",
+		"@microsoft/kiota-bundle": "1.0.0-preview.90",
+		"@microsoft/kiota-http-fetchlibrary": "1.0.0-preview.90",
+		"@microsoft/kiota-serialization-json": "1.0.0-preview.90",
+		"@microsoft/kiota-serialization-text": "1.0.0-preview.90",
+		"@modelcontextprotocol/sdk": "^1.7.0",
+		"zod": "^3.24.2"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "1.9.4",
+		"@types/node": "^22.13.10",
+		"abstract-syntax-tree": "^2.22.0",
+		"tsup": "^8.4.0",
+		"tsx": "^4.19.3",
+		"typescript": "^5.8.2"
+	}
+}
