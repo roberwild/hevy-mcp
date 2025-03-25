@@ -16,7 +16,7 @@ The project has:
 ### 1. Project Structure
 
 ```
-mcp-hevy/
+hevy-mcp/
 ├── .env                   # Environment variables (API keys)
 ├── src/
 │   ├── index.ts           # Main entry point
