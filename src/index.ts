@@ -10,7 +10,6 @@ import { registerWorkoutTools } from "./tools/workouts.js";
 import { createClient } from "./utils/hevyClient.js";
 
 const HEVY_API_BASEURL = "https://api.hevyapp.com";
-const USER_AGENT = "mcp-/1.0";
 
 // Create server instance
 const server = new McpServer({
