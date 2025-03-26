@@ -1,6 +1,7 @@
 # hevy-mcp: Model Context Protocol Server for Hevy Fitness API
 
 [![License: ISC](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![smithery badge](https://smithery.ai/badge/@chrisdoc/hevy-mcp)](https://smithery.ai/server/@chrisdoc/hevy-mcp)
 
 A Model Context Protocol (MCP) server implementation that interfaces with the [Hevy fitness tracking app](https://www.hevyapp.com/) and its [API](https://api.hevyapp.com/docs/). This server enables AI assistants to access and manage workout data, routines, exercise templates, and more through the Hevy API (requires PRO subscription).
 
@@ -19,6 +20,15 @@ A Model Context Protocol (MCP) server implementation that interfaces with the [H
 
 ## Installation
 
+### Installing via Smithery
+
+To install hevy-mcp for Claude Desktop automatically via [Smithery](https://smithery.ai/server/@chrisdoc/hevy-mcp):
+
+```bash
+npx -y @smithery/cli install @chrisdoc/hevy-mcp --client claude
+```
+
+### Manual Installation
 ```bash
 # Clone the repository
 git clone https://github.com/chrisdoc/hevy-mcp.git
