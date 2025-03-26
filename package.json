@@ -14,7 +14,7 @@
 		"mcp-server-cloudflare": "dist/index.js"
 	},
 	"scripts": {
-		"inspect": "pnpm build && npx @modelcontextprotocol/inspector@latest node dist/index.js",
+		"inspect": "npm run build && npx -y @modelcontextprotocol/inspector@latest node dist/index.js",
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"export-specs": "node ./scripts/export-openapi-spec.js",
 		"build": "tsup",
@@ -23,7 +23,7 @@
 		"dev": "tsx watch --clear-screen=false src/index.ts",
 		"check": "biome check --fix "
 	},
-	"type": "module",
+	"type": "module",	
 	"keywords": ["mcp", "hevy", "fitness", "api", "model context protocol"],
 	"author": "Christoph Kieslich",
 	"license": "ISC",
