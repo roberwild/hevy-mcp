@@ -1,6 +1,6 @@
 {
 	"name": "hevy-mcp",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"main": "dist/index.js",
 	"module": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -26,7 +26,7 @@
 	"type": "module",	
 	"keywords": ["mcp", "hevy", "fitness", "api", "model context protocol"],
 	"author": "Christoph Kieslich",
-	"license": "ISC",
+	"license": "MIT",
 	"description": "A Model Context Protocol (MCP) server implementation that interfaces with the Hevy fitness tracking app and its API.",
 	"dependencies": {
 		"@dotenvx/dotenvx": "^1.39.0",
