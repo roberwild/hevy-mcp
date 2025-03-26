@@ -13,6 +13,7 @@
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"export-specs": "node ./scripts/export-openapi-spec.js",
 		"build": "tsup",
+		"build:client":"kiota generate -l typescript -d openapi-spec.json -c HevyClient -o ./src/generated/client --log-level error --clean-output --clear-cache",
 		"start": "node dist/index.js",
 		"dev": "tsx watch --clear-screen=false src/index.ts",
 		"check": "biome check --fix "
@@ -40,5 +41,7 @@
 		"tsup": "^8.4.0",
 		"tsx": "^4.19.3",
 		"typescript": "^5.8.2"
+	},"engines": {
+		"node": ">=20.0.0"
 	}
 }

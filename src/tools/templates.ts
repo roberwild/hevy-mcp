@@ -1,7 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import type { HevyClient } from "../client/hevyClient.js";
-import type { ExerciseTemplate } from "../client/models/index.js";
+import type { HevyClient } from "../generated/client/hevyClient.js";
+import type { ExerciseTemplate } from "../generated/client/models/index.js";
 
 /**
  * Register all exercise template-related tools with the MCP server

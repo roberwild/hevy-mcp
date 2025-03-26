@@ -1,8 +1,8 @@
 # hevy-mcp: Model Context Protocol Server for Hevy Fitness API
 
-[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
+[![License: ISC](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-A Model Context Protocol (MCP) server implementation that interfaces with the Hevy fitness tracking API. This server enables AI assistants to access and manage workout data, routines, exercise templates, and more through the Hevy API.
+A Model Context Protocol (MCP) server implementation that interfaces with the [Hevy fitness tracking app](https://www.hevyapp.com/) and its [API](https://api.hevyapp.com/docs/). This server enables AI assistants to access and manage workout data, routines, exercise templates, and more through the Hevy API (requires PRO subscription).
 
 ## Features
 
@@ -13,7 +13,7 @@ A Model Context Protocol (MCP) server implementation that interfaces with the He
 
 ## Prerequisites
 
-- Node.js (v16 or higher)
+- Node.js (v20 or higher)
 - npm or yarn
 - A Hevy API key
 
@@ -98,7 +98,8 @@ hevy-mcp/
 │   │   ├── routines.ts    # Routine-related tools
 │   │   ├── templates.ts   # Exercise template tools
 │   │   └── folders.ts     # Routine folder tools
-│   ├── client/            # API client (generated code)
+│   ├── generated/         # API client (generated code)
+│   │   ├── client/        # Kiota-generated client
 │   └── utils/             # Helper utilities
 │       ├── formatters.ts  # Data formatting helpers
 │       └── validators.ts  # Input validation helpers
@@ -122,6 +123,7 @@ The API client is generated from the OpenAPI specification using Kiota:
 
 ```bash
 npm run export-specs
+npm run build:client
 ```
 
 ## License

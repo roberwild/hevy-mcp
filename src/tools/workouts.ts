@@ -1,11 +1,11 @@
 import type { RequestConfiguration } from "@microsoft/kiota-abstractions";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import type { HevyClient } from "../client/hevyClient.js";
+import type { HevyClient } from "../generated/client/hevyClient.js";
 import type {
 	PostWorkoutsRequestBody,
 	Workout,
-} from "../client/models/index.js";
+} from "../generated/client/models/index.js";
 
 /**
  * Register all workout-related tools with the MCP server

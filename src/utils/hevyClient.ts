@@ -3,7 +3,7 @@ import type {
 	RequestInformation,
 } from "@microsoft/kiota-abstractions";
 import { FetchRequestAdapter } from "@microsoft/kiota-http-fetchlibrary";
-import { createHevyClient } from "../client/hevyClient.js";
+import { createHevyClient } from "../generated/client/hevyClient.js";
 
 class ApiKeyAuthProvider implements AuthenticationProvider {
 	private apiKey: string;
