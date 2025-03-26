@@ -5,14 +5,15 @@ WORKDIR /app
 
 # Copy package files and install dependencies
 COPY package*.json ./
-RUN npm install --ignore-scripts
+RUN npm ci --ignore-scripts
 
 # Copy the rest of the application
 COPY . ./
 
+ENV NODE_ENV=production
+ENV HEVY_API_KEY=your-api-key-here
+
 # Build the application
 RUN npm run build
-
-EXPOSE 3000
 
 CMD [ "npm", "start" ]
