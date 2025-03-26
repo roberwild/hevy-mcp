@@ -37,7 +37,7 @@ cp .env.sample .env
 Create a `.env` file in the project root with the following content:
 
 ```
-API_KEY=your_hevy_api_key_here
+HEVY_API_KEY=your_hevy_api_key_here
 ```
 
 Replace `your_hevy_api_key_here` with your actual Hevy API key.

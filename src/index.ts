@@ -18,14 +18,14 @@ const server = new McpServer({
 });
 
 // Check for API key
-if (!process.env.API_KEY) {
-	console.error("API_KEY environment variable is not set");
+if (!process.env.HEVY_API_KEY) {
+	console.error("HEVY_API_KEY environment variable is not set");
 	process.exit(1);
 }
 
 // Configure client
-// We've already checked for API_KEY existence above, so it's safe to use here
-const apiKey = process.env.API_KEY || "";
+// We've already checked for HEVY_API_KEY existence above, so it's safe to use here
+const apiKey = process.env.HEVY_API_KEY || "";
 const hevyClient = createClient(apiKey, HEVY_API_BASEURL);
 // Register all tools
 registerWorkoutTools(server, hevyClient);
