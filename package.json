@@ -6,6 +6,10 @@
 	"types": "dist/index.d.ts",
 	"files": ["dist", "README.md"],
 	"access": "public",
+	"bugs": {
+		"url": "https://github.com/chrisdoc/hevy-mcp/issues"
+	},
+	"homepage": "https://github.com/chrisdoc/hevy-mcp#readme",
 	"bin": {
 		"mcp-server-cloudflare": "dist/index.js"
 	},
@@ -13,16 +17,16 @@
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"export-specs": "node ./scripts/export-openapi-spec.js",
 		"build": "tsup",
-		"build:client":"kiota generate -l typescript -d openapi-spec.json -c HevyClient -o ./src/generated/client --log-level error --clean-output --clear-cache",
+		"build:client": "kiota generate -l typescript -d openapi-spec.json -c HevyClient -o ./src/generated/client --log-level error --clean-output --clear-cache",
 		"start": "node dist/index.js",
 		"dev": "tsx watch --clear-screen=false src/index.ts",
 		"check": "biome check --fix "
 	},
 	"type": "module",
-	"keywords": [],
-	"author": "",
+	"keywords": ["mcp", "hevy", "fitness", "api", "model context protocol"],
+	"author": "Christoph Kieslich",
 	"license": "ISC",
-	"description": "",
+	"description": "A Model Context Protocol (MCP) server implementation that interfaces with the Hevy fitness tracking app and its API.",
 	"dependencies": {
 		"@dotenvx/dotenvx": "^1.39.0",
 		"@microsoft/kiota-abstractions": "1.0.0-preview.90",
@@ -41,7 +45,8 @@
 		"tsup": "^8.4.0",
 		"tsx": "^4.19.3",
 		"typescript": "^5.8.2"
-	},"engines": {
+	},
+	"engines": {
 		"node": ">=20.0.0"
 	}
 }
