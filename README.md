@@ -42,6 +42,25 @@ cp .env.sample .env
 # Edit .env and add your Hevy API key
 ```
 
+### Integration with Cursor
+
+To use this MCP server with Cursor, you need to update your `~/.cursor/mcp.json` file by adding the following configuration:
+
+```json
+{
+  "hevy-mcp-server": {
+    "command": "npx",
+    "args": ["-y", "hevy-mcp"],
+    "env": {
+      "HEVY_API_KEY": "your-api-key-here"
+    }
+  }
+}
+```
+
+Make sure to replace `your-api-key-here` with your actual Hevy API key.
+
+
 ## Configuration
 
 Create a `.env` file in the project root with the following content:
