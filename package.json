@@ -1,6 +1,6 @@
 {
 	"name": "hevy-mcp",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"main": "dist/index.js",
 	"module": "dist/index.js",
 	"types": "dist/index.d.ts",
@@ -11,7 +11,7 @@
 	},
 	"homepage": "https://github.com/chrisdoc/hevy-mcp#readme",
 	"bin": {
-		"mcp-server-cloudflare": "dist/index.js"
+		"hevy-mcp": "dist/index.js"
 	},
 	"scripts": {
 		"inspect": "npm run build && npx -y @modelcontextprotocol/inspector@latest node dist/index.js",
