@@ -14,6 +14,7 @@
 		"mcp-server-cloudflare": "dist/index.js"
 	},
 	"scripts": {
+		"inspect": "pnpm build && npx @modelcontextprotocol/inspector@latest node dist/index.js",
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"export-specs": "node ./scripts/export-openapi-spec.js",
 		"build": "tsup",
