@@ -1,0 +1,29 @@
+# Smithery configuration file: https://smithery.ai/docs/config#smitheryyaml
+
+startCommand:
+  type: stdio
+  configSchema:
+    # JSON Schema defining the configuration options for the MCP.
+    type: object
+    required:
+      - hevyApiKey
+    properties:
+      hevyApiKey:
+        type: string
+        description: Your Hevy API key to authenticate with the Hevy Fitness API.
+      port:
+        type: number
+        default: 3000
+        description: The port on which the MCP server should listen. Defaults to 3000 if
+          not specified.
+  commandFunction:
+    # A JS function that produces the CLI command based on the given config to start the MCP on stdio.
+    |-
+    (config) => ({
+      command: 'node',
+      args: ['dist/index.js'],
+      env: Object.assign({}, process.env, {HEVY_API_KEY: config.hevyApiKey, PORT: config.port ? String(config.port) : '3000'})
+    })
+  exampleConfig:
+    hevyApiKey: dummy-hevy-api-key
+    port: 3000
