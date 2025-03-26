@@ -16,7 +16,7 @@ const HEVY_API_BASEURL = "https://api.hevyapp.com";
 // Create server instance
 const server = new McpServer({
 	name: "hevy",
-	version: "1.0.4",
+	version: "1.0.5",
 });
 
 // Check for API key
