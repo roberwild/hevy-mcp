@@ -1,13 +1,10 @@
 {
 	"name": "hevy-mcp",
-	"version": "1.0.6",
+	"version": "1.1.0",
 	"main": "dist/index.js",
 	"module": "dist/index.js",
 	"types": "dist/index.d.ts",
-	"files": [
-		"dist",
-		"README.md"
-	],
+	"files": ["dist", "README.md"],
 	"access": "public",
 	"bugs": {
 		"url": "https://github.com/chrisdoc/hevy-mcp/issues"
@@ -30,13 +27,7 @@
 		"version:major": "npm version major"
 	},
 	"type": "module",
-	"keywords": [
-		"mcp",
-		"hevy",
-		"fitness",
-		"api",
-		"model context protocol"
-	],
+	"keywords": ["mcp", "hevy", "fitness", "api", "model context protocol"],
 	"author": "Christoph Kieslich",
 	"license": "MIT",
 	"description": "A Model Context Protocol (MCP) server implementation that interfaces with the Hevy fitness tracking app and its API.",
