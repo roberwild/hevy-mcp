@@ -24,7 +24,9 @@
 		"check": "biome check --fix ",
 		"version:patch": "npm version patch",
 		"version:minor": "npm version minor",
-		"version:major": "npm version major"
+		"version:major": "npm version major",
+		"release": "semantic-release",
+		"commit": "commit"
 	},
 	"type": "module",
 	"keywords": ["mcp", "hevy", "fitness", "api", "model context protocol"],
@@ -46,9 +48,15 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
+		"@commitlint/cli": "^19.8.0",
+		"@commitlint/config-conventional": "^19.8.0",
+		"@commitlint/prompt-cli": "^19.8.0",
+		"@semantic-release/changelog": "^6.0.3",
+		"@semantic-release/git": "^10.0.1",
 		"@types/node": "^22.13.13",
 		"abstract-syntax-tree": "^2.22.0",
 		"lefthook": "^1.11.5",
+		"semantic-release": "^24.2.3",
 		"tsup": "^8.4.0",
 		"tsx": "^4.19.3",
 		"typescript": "^5.8.2",
