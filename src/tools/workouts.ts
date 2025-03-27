@@ -6,6 +6,7 @@ import type {
 	PostWorkoutsRequestBody,
 	Workout,
 } from "../generated/client/models/index.js";
+import { formatWorkout } from "../utils/formatters.js";
 
 /**
  * Register all workout-related tools with the MCP server
@@ -365,56 +366,4 @@ export function registerWorkoutTools(
 			}
 		},
 	);
-}
-
-/**
- * Format a workout object for consistent presentation
- */
-function formatWorkout(workout: Workout): Record<string, unknown> {
-	return {
-		id: workout.id,
-		date: workout.createdAt,
-		name: workout.title,
-		description: workout.description,
-		duration: calculateDuration(workout.startTime || "", workout.endTime || ""),
-		exercises: workout.exercises?.map((exercise) => {
-			return {
-				name: exercise.title,
-				notes: exercise.notes,
-				sets: exercise.sets?.map((set) => ({
-					type: set.type,
-					weight: set.weightKg,
-					reps: set.reps,
-					distance: set.distanceMeters,
-					duration: set.durationSeconds,
-					rpe: set.rpe,
-					customMetric: set.customMetric,
-				})),
-			};
-		}),
-	};
-}
-
-/**
- * Calculate duration between two ISO timestamp strings
- */
-function calculateDuration(
-	startTime: string | number | null | undefined,
-	endTime: string | number | null | undefined,
-): string {
-	try {
-		if (!startTime || !endTime) return "Unknown duration";
-
-		const start =
-			typeof startTime === "number" ? startTime : new Date(startTime).getTime();
-		const end =
-			typeof endTime === "number" ? endTime : new Date(endTime).getTime();
-
-		// Calculate duration in minutes
-		const durationMinutes = Math.round((end - start) / 60000);
-
-		return `${durationMinutes} minutes`;
-	} catch (error) {
-		return "Unknown duration";
-	}
 }

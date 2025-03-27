@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 import "@dotenvx/dotenvx/config";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
@@ -11,12 +10,14 @@ import { registerTemplateTools } from "./tools/templates.js";
 import { registerWorkoutTools } from "./tools/workouts.js";
 import { createClient } from "./utils/hevyClient.js";
 
+import Package from "paketo";
+
 const HEVY_API_BASEURL = "https://api.hevyapp.com";
 
 // Create server instance
 const server = new McpServer({
-	name: "hevy",
-	version: "1.0.5",
+	name: Package.name,
+	version: Package.version,
 });
 
 // Check for API key

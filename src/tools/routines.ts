@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import type { HevyClient } from "../generated/client/hevyClient.js";
 import type { Routine } from "../generated/client/models/index.js";
+import { formatRoutine } from "../utils/formatters.js";
 
 /**
  * Register all routine-related tools with the MCP server
@@ -273,35 +274,4 @@ export function registerRoutineTools(
 			}
 		},
 	);
-}
-
-/**
- * Format a routine object for consistent presentation
- */
-function formatRoutine(routine: Routine): Record<string, unknown> {
-	return {
-		id: routine.id,
-		title: routine.title,
-		folderId: routine.folderId,
-		createdAt: routine.createdAt,
-		updatedAt: routine.updatedAt,
-		exercises: routine.exercises?.map((exercise) => {
-			return {
-				name: exercise.title,
-				index: exercise.index,
-				exerciseTemplateId: exercise.exerciseTemplateId,
-				notes: exercise.notes,
-				supersetId: exercise.supersetsId,
-				sets: exercise.sets?.map((set) => ({
-					index: set.index,
-					type: set.type,
-					weight: set.weightKg,
-					reps: set.reps,
-					distance: set.distanceMeters,
-					duration: set.durationSeconds,
-					customMetric: set.customMetric,
-				})),
-			};
-		}),
-	};
 }

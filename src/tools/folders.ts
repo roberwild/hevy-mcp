@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import type { HevyClient } from "../generated/client/hevyClient.js";
 import type { RoutineFolder } from "../generated/client/models/index.js";
+import { formatRoutineFolder } from "../utils/formatters.js";
 
 /**
  * Register all routine folder-related tools with the MCP server
@@ -145,17 +146,4 @@ export function registerFolderTools(server: McpServer, hevyClient: HevyClient) {
 			}
 		},
 	);
-}
-
-/**
- * Format a routine folder object for consistent presentation
- */
-function formatRoutineFolder(folder: RoutineFolder): Record<string, unknown> {
-	return {
-		id: folder.id,
-		title: folder.title,
-		index: folder.index,
-		createdAt: folder.createdAt,
-		updatedAt: folder.updatedAt,
-	};
 }

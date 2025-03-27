@@ -104,19 +104,7 @@ export function registerTemplateTools(
 		},
 	);
 }
-
-/**
- * Format an exercise template object for consistent presentation
- */
-function formatExerciseTemplate(
-	template: ExerciseTemplate,
-): Record<string, unknown> {
-	return {
-		id: template.id,
-		title: template.title,
-		type: template.type,
-		primaryMuscleGroup: template.primaryMuscleGroup,
-		secondaryMuscleGroups: template.secondaryMuscleGroups,
-		isCustom: template.isCustom,
-	};
+function formatExerciseTemplate(template: ExerciseTemplate): any {
+  throw new Error("Function not implemented.");
 }
+
