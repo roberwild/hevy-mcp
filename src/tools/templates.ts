@@ -2,6 +2,7 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import type { HevyClient } from "../generated/client/hevyClient.js";
 import type { ExerciseTemplate } from "../generated/client/models/index.js";
+import { formatExerciseTemplate } from "../utils/formatters.js";
 
 /**
  * Register all exercise template-related tools with the MCP server
@@ -104,7 +105,3 @@ export function registerTemplateTools(
 		},
 	);
 }
-function formatExerciseTemplate(template: ExerciseTemplate): any {
-  throw new Error("Function not implemented.");
-}
-

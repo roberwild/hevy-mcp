@@ -1,4 +1,11 @@
-import type { Routine, Workout, RoutineFolder, Routine_exercises as Exercise, Routine_exercises_sets as ExerciseSet,ExerciseTemplate } from "../generated/client/models/index.js";
+import type {
+	Routine_exercises as Exercise,
+	Routine_exercises_sets as ExerciseSet,
+	ExerciseTemplate,
+	Routine,
+	RoutineFolder,
+	Workout,
+} from "../generated/client/models/index.js";
 
 /**
  * Format a workout object for consistent presentation
@@ -62,7 +69,9 @@ export function formatRoutine(routine: Routine): Record<string, unknown> {
 /**
  * Format a routine folder object for consistent presentation
  */
-export function formatRoutineFolder(folder: RoutineFolder): Record<string, unknown> {
+export function formatRoutineFolder(
+	folder: RoutineFolder,
+): Record<string, unknown> {
 	return {
 		id: folder.id,
 		title: folder.title,
@@ -91,11 +100,10 @@ export function calculateDuration(
 	return `${hours}h ${minutes}m ${seconds}s`;
 }
 
-
 /**
  * Format an exercise template object for consistent presentation
  */
-function formatExerciseTemplate(
+export function formatExerciseTemplate(
 	template: ExerciseTemplate,
 ): Record<string, unknown> {
 	return {

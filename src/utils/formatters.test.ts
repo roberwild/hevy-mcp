@@ -1,11 +1,15 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
+import type {
+	Routine,
+	RoutineFolder,
+	Workout,
+} from "../generated/client/models";
 import {
-	formatWorkout,
+	calculateDuration,
 	formatRoutine,
 	formatRoutineFolder,
-	calculateDuration,
+	formatWorkout,
 } from "./formatters";
-import { Workout, Routine, RoutineFolder } from "../generated/client/models";
 
 describe("Formatters", () => {
 	describe("formatWorkout", () => {
@@ -87,8 +91,12 @@ describe("Formatters", () => {
 		});
 
 		it("should return 'Unknown duration' for invalid inputs", () => {
-			expect(calculateDuration(null, "2025-03-27T08:00:00Z")).toBe("Unknown duration");
-			expect(calculateDuration("2025-03-27T07:00:00Z", undefined)).toBe("Unknown duration");
+			expect(calculateDuration(null, "2025-03-27T08:00:00Z")).toBe(
+				"Unknown duration",
+			);
+			expect(calculateDuration("2025-03-27T07:00:00Z", undefined)).toBe(
+				"Unknown duration",
+			);
 			expect(calculateDuration(null, null)).toBe("Unknown duration");
 		});
 	});
