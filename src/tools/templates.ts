@@ -14,9 +14,10 @@ export function registerTemplateTools(
 	// Get exercise templates
 	server.tool(
 		"get-exercise-templates",
+		"Get a paginated list of exercise templates available on the account. Returns both default and custom exercise templates with details including title, type, primary muscle group, and secondary muscle groups. Supports up to 100 templates per page.",
 		{
-			page: z.number().int().gte(1).default(1),
-			pageSize: z.number().int().gte(1).lte(100).default(20),
+			page: z.coerce.number().int().gte(1).default(1),
+			pageSize: z.coerce.number().int().gte(1).lte(100).default(20),
 		},
 		async ({ page, pageSize }) => {
 			try {
@@ -50,6 +51,7 @@ export function registerTemplateTools(
 							text: `Error fetching exercise templates: ${error instanceof Error ? error.message : String(error)}`,
 						},
 					],
+					isError: true,
 				};
 			}
 		},
@@ -58,6 +60,7 @@ export function registerTemplateTools(
 	// Get single exercise template by ID
 	server.tool(
 		"get-exercise-template",
+		"Get complete details of a specific exercise template by ID. Returns all template information including title, type, primary muscle group, secondary muscle groups, and whether it's a custom exercise.",
 		{
 			exerciseTemplateId: z.string().min(1),
 		},
@@ -100,6 +103,7 @@ export function registerTemplateTools(
 							text: `Error fetching exercise template: ${error instanceof Error ? error.message : String(error)}`,
 						},
 					],
+					isError: true,
 				};
 			}
 		},

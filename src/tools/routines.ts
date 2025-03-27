@@ -14,9 +14,10 @@ export function registerRoutineTools(
 	// Get routines
 	server.tool(
 		"get-routines",
+		"Get a paginated list of routines. Returns routine details including title, creation date, folder assignment, and exercise configurations. Results include both default and custom routines.",
 		{
-			page: z.number().int().gte(1).default(1),
-			pageSize: z.number().int().gte(1).lte(10).default(5),
+			page: z.coerce.number().int().gte(1).default(1),
+			pageSize: z.coerce.number().int().gte(1).lte(10).default(5),
 		},
 		async ({ page, pageSize }) => {
 			try {
@@ -48,6 +49,7 @@ export function registerRoutineTools(
 							text: `Error fetching routines: ${error instanceof Error ? error.message : String(error)}`,
 						},
 					],
+					isError: true,
 				};
 			}
 		},
@@ -56,16 +58,18 @@ export function registerRoutineTools(
 	// Get single routine by ID
 	server.tool(
 		"get-routine",
+		"Get complete details of a specific routine by ID. Returns all routine information including title, notes, assigned folder, and detailed exercise data with set configurations.",
 		{
 			routineId: z.string().min(1),
 		},
 		async ({ routineId }) => {
 			try {
 				// Since the Kiota client doesn't have a get() method for routine by ID, we need to use the list endpoint and filter
-				const response = await hevyClient.v1.routines.get();
-				const data = response?.routines?.find(
-					(routine) => routine.id === routineId,
-				);
+				const data = await hevyClient.v1.routines.byRoutineId(routineId).put({
+					routine: {
+						title: "", // We're providing a minimal body as required by the API
+					},
+				});
 
 				if (!data) {
 					return {
@@ -97,6 +101,7 @@ export function registerRoutineTools(
 							text: `Error fetching routine: ${error instanceof Error ? error.message : String(error)}`,
 						},
 					],
+					isError: true,
 				};
 			}
 		},
@@ -105,26 +110,27 @@ export function registerRoutineTools(
 	// Create new routine
 	server.tool(
 		"create-routine",
+		"Create a new workout routine in your Hevy account. Requires title and at least one exercise with sets. Optionally assign to a specific folder. Returns the complete routine details upon successful creation including the newly assigned routine ID.",
 		{
 			title: z.string().min(1),
-			folderId: z.number().nullable().optional(),
+			folderId: z.coerce.number().nullable().optional(),
 			notes: z.string().optional(),
 			exercises: z.array(
 				z.object({
 					exerciseTemplateId: z.string().min(1),
-					supersetId: z.number().nullable().optional(),
-					restSeconds: z.number().int().min(0).optional(),
+					supersetId: z.coerce.number().nullable().optional(),
+					restSeconds: z.coerce.number().int().min(0).optional(),
 					notes: z.string().optional(),
 					sets: z.array(
 						z.object({
 							type: z
 								.enum(["warmup", "normal", "failure", "dropset"])
 								.default("normal"),
-							weightKg: z.number().optional(),
-							reps: z.number().int().optional(),
-							distanceMeters: z.number().int().optional(),
-							durationSeconds: z.number().int().optional(),
-							customMetric: z.number().optional(),
+							weightKg: z.coerce.number().optional(),
+							reps: z.coerce.number().int().optional(),
+							distanceMeters: z.coerce.number().int().optional(),
+							durationSeconds: z.coerce.number().int().optional(),
+							customMetric: z.coerce.number().optional(),
 						}),
 					),
 				}),
@@ -184,6 +190,7 @@ export function registerRoutineTools(
 							text: `Error creating routine: ${error instanceof Error ? error.message : String(error)}`,
 						},
 					],
+					isError: true,
 				};
 			}
 		},
@@ -192,6 +199,7 @@ export function registerRoutineTools(
 	// Update existing routine
 	server.tool(
 		"update-routine",
+		"Update an existing workout routine by ID. You can modify the title, notes, and exercise data. Returns the updated routine with all changes applied. Note that you cannot change the folder assignment through this method.",
 		{
 			routineId: z.string().min(1),
 			title: z.string().min(1),
@@ -199,19 +207,19 @@ export function registerRoutineTools(
 			exercises: z.array(
 				z.object({
 					exerciseTemplateId: z.string().min(1),
-					supersetId: z.number().nullable().optional(),
-					restSeconds: z.number().int().min(0).optional(),
+					supersetId: z.coerce.number().nullable().optional(),
+					restSeconds: z.coerce.number().int().min(0).optional(),
 					notes: z.string().optional(),
 					sets: z.array(
 						z.object({
 							type: z
 								.enum(["warmup", "normal", "failure", "dropset"])
 								.default("normal"),
-							weightKg: z.number().optional(),
-							reps: z.number().int().optional(),
-							distanceMeters: z.number().int().optional(),
-							durationSeconds: z.number().int().optional(),
-							customMetric: z.number().optional(),
+							weightKg: z.coerce.number().optional(),
+							reps: z.coerce.number().int().optional(),
+							distanceMeters: z.coerce.number().int().optional(),
+							durationSeconds: z.coerce.number().int().optional(),
+							customMetric: z.coerce.number().optional(),
 						}),
 					),
 				}),
@@ -270,6 +278,7 @@ export function registerRoutineTools(
 							text: `Error updating routine: ${error instanceof Error ? error.message : String(error)}`,
 						},
 					],
+					isError: true,
 				};
 			}
 		},
