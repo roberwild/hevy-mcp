@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/chrisdoc/hevy-mcp/compare/v1.2.0...v1.2.1) (2025-03-30)
+
+
+### Bug Fixes
+
+* package.json loading ([0ad8af4](https://github.com/chrisdoc/hevy-mcp/commit/0ad8af40b0847f550eefb86a14462e310882493b))
+
 # [1.2.0](https://github.com/chrisdoc/hevy-mcp/compare/v1.1.1...v1.2.0) (2025-03-27)
 
 
