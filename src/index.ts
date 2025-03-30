@@ -10,14 +10,14 @@ import { registerTemplateTools } from "./tools/templates.js";
 import { registerWorkoutTools } from "./tools/workouts.js";
 import { createClient } from "./utils/hevyClient.js";
 
-import Package from "paketo";
+import { name, version } from "../package.json";
 
 const HEVY_API_BASEURL = "https://api.hevyapp.com";
 
 // Create server instance
 const server = new McpServer({
-	name: Package.name,
-	version: Package.version,
+	name,
+	version,
 });
 
 // Check for API key

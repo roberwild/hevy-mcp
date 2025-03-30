@@ -8,14 +8,9 @@ export default defineConfig({
 	clean: true,
 	dts: true,
 	splitting: false,
-
-	outDir: "dist",
-	// Explicitly handle .js extensions in imports
-	esbuildOptions(options) {
-		options.banner = {
-			js: "// Generated with tsup\n// https://github.com/egoist/tsup",
-		};
-		options.platform = "node";
-		options.format = "esm";
+	banner: {
+		js: "// Generated with tsup\n// https://github.com/egoist/tsup",
 	},
+	outDir: "dist",
+	bundle: true,
 });
