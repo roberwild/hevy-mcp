@@ -31,7 +31,9 @@ export function createErrorResponse(
 	const errorMessage = error instanceof Error ? error.message : String(error);
 	// Extract error code if available (for logging purposes)
 	const errorCode =
-		error instanceof Error && "code" in error ? (error as { code?: string }).code : undefined;
+		error instanceof Error && "code" in error
+			? (error as { code?: string }).code
+			: undefined;
 
 	// Include error code in logs if available
 	if (errorCode) {
@@ -63,7 +65,9 @@ export function createErrorResponse(
  * @returns A function that catches errors and returns standardized error responses
  */
 // Define a more specific type for function parameters
-type McpToolFunction = (...args: Record<string, unknown>[]) => Promise<McpToolResponse>;
+type McpToolFunction = (
+	...args: Record<string, unknown>[]
+) => Promise<McpToolResponse>;
 
 /**
  * Wrap an async function with standardized error handling
@@ -74,7 +78,7 @@ type McpToolFunction = (...args: Record<string, unknown>[]) => Promise<McpToolRe
  */
 export function withErrorHandling<T extends McpToolFunction>(
 	fn: T,
-	context: string
+	context: string,
 ): T {
 	return (async (...args: Parameters<T>) => {
 		try {

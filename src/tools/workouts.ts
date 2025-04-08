@@ -2,9 +2,12 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import type { HevyClient } from "../generated/client/hevyClient.js";
 import type { PostWorkoutsRequestBody } from "../generated/client/models/index.js";
-import { formatWorkout } from "../utils/formatters.js";
 import { withErrorHandling } from "../utils/error-handler.js";
-import { createJsonResponse, createEmptyResponse } from "../utils/response-formatter.js";
+import { formatWorkout } from "../utils/formatters.js";
+import {
+	createEmptyResponse,
+	createJsonResponse,
+} from "../utils/response-formatter.js";
 
 /**
  * Interface for exercise set input
@@ -117,7 +120,7 @@ export function registerWorkoutTools(
 			const events = data?.events || [];
 
 			if (events.length === 0) {
-				return createEmptyResponse("No workout events found since " + since);
+				return createEmptyResponse(`No workout events found since ${since}`);
 			}
 
 			return createJsonResponse(events);
@@ -155,43 +158,53 @@ export function registerWorkoutTools(
 				}),
 			),
 		},
-		withErrorHandling(async ({ title, description, startTime, endTime, isPrivate, exercises }) => {
-			const requestBody: PostWorkoutsRequestBody = {
-				workout: {
-					title,
-					description: description || null,
-					startTime,
-					endTime,
-					isPrivate,
-					exercises: exercises.map((exercise: ExerciseInput) => ({
-						exerciseTemplateId: exercise.exerciseTemplateId,
-						supersetId: exercise.supersetId || null,
-						notes: exercise.notes || null,
-						sets: exercise.sets.map((set: ExerciseSetInput) => ({
-							type: set.type,
-							weightKg: set.weightKg || null,
-							reps: set.reps || null,
-							distanceMeters: set.distanceMeters || null,
-							durationSeconds: set.durationSeconds || null,
-							rpe: set.rpe || null,
-							customMetric: set.customMetric || null,
+		withErrorHandling(
+			async ({
+				title,
+				description,
+				startTime,
+				endTime,
+				isPrivate,
+				exercises,
+			}) => {
+				const requestBody: PostWorkoutsRequestBody = {
+					workout: {
+						title,
+						description: description || null,
+						startTime,
+						endTime,
+						isPrivate,
+						exercises: exercises.map((exercise: ExerciseInput) => ({
+							exerciseTemplateId: exercise.exerciseTemplateId,
+							supersetId: exercise.supersetId || null,
+							notes: exercise.notes || null,
+							sets: exercise.sets.map((set: ExerciseSetInput) => ({
+								type: set.type,
+								weightKg: set.weightKg || null,
+								reps: set.reps || null,
+								distanceMeters: set.distanceMeters || null,
+								durationSeconds: set.durationSeconds || null,
+								rpe: set.rpe || null,
+								customMetric: set.customMetric || null,
+							})),
 						})),
-					})),
-				},
-			};
+					},
+				};
 
-			const data = await hevyClient.v1.workouts.post(requestBody);
+				const data = await hevyClient.v1.workouts.post(requestBody);
 
-			if (!data) {
-				return createEmptyResponse("Failed to create workout");
-			}
+				if (!data) {
+					return createEmptyResponse("Failed to create workout");
+				}
 
-			const workout = formatWorkout(data);
-			return createJsonResponse(workout, {
-				pretty: true,
-				indent: 2
-			});
-		}, "create-workout"),
+				const workout = formatWorkout(data);
+				return createJsonResponse(workout, {
+					pretty: true,
+					indent: 2,
+				});
+			},
+			"create-workout",
+		),
 	);
 
 	// Update workout
@@ -226,52 +239,57 @@ export function registerWorkoutTools(
 				}),
 			),
 		},
-		withErrorHandling(async ({
-			workoutId,
-			title,
-			description,
-			startTime,
-			endTime,
-			isPrivate,
-			exercises,
-		}) => {
-			const requestBody: PostWorkoutsRequestBody = {
-				workout: {
-					title,
-					description: description || null,
-					startTime,
-					endTime,
-					isPrivate,
-					exercises: exercises.map((exercise: ExerciseInput) => ({
-						exerciseTemplateId: exercise.exerciseTemplateId,
-						supersetId: exercise.supersetId || null,
-						notes: exercise.notes || null,
-						sets: exercise.sets.map((set: ExerciseSetInput) => ({
-							type: set.type,
-							weightKg: set.weightKg || null,
-							reps: set.reps || null,
-							distanceMeters: set.distanceMeters || null,
-							durationSeconds: set.durationSeconds || null,
-							rpe: set.rpe || null,
-							customMetric: set.customMetric || null,
+		withErrorHandling(
+			async ({
+				workoutId,
+				title,
+				description,
+				startTime,
+				endTime,
+				isPrivate,
+				exercises,
+			}) => {
+				const requestBody: PostWorkoutsRequestBody = {
+					workout: {
+						title,
+						description: description || null,
+						startTime,
+						endTime,
+						isPrivate,
+						exercises: exercises.map((exercise: ExerciseInput) => ({
+							exerciseTemplateId: exercise.exerciseTemplateId,
+							supersetId: exercise.supersetId || null,
+							notes: exercise.notes || null,
+							sets: exercise.sets.map((set: ExerciseSetInput) => ({
+								type: set.type,
+								weightKg: set.weightKg || null,
+								reps: set.reps || null,
+								distanceMeters: set.distanceMeters || null,
+								durationSeconds: set.durationSeconds || null,
+								rpe: set.rpe || null,
+								customMetric: set.customMetric || null,
+							})),
 						})),
-					})),
-				},
-			};
+					},
+				};
 
-			const data = await hevyClient.v1.workouts
-				.byWorkoutId(workoutId)
-				.put(requestBody);
+				const data = await hevyClient.v1.workouts
+					.byWorkoutId(workoutId)
+					.put(requestBody);
 
-			if (!data) {
-				return createEmptyResponse(`Failed to update workout with ID ${workoutId}`);
-			}
+				if (!data) {
+					return createEmptyResponse(
+						`Failed to update workout with ID ${workoutId}`,
+					);
+				}
 
-			const workout = formatWorkout(data);
-			return createJsonResponse(workout, {
-				pretty: true,
-				indent: 2
-			});
-		}, "update-workout"),
+				const workout = formatWorkout(data);
+				return createJsonResponse(workout, {
+					pretty: true,
+					indent: 2,
+				});
+			},
+			"update-workout",
+		),
 	);
 }

@@ -200,7 +200,7 @@ export function calculateDuration(
 		const end = new Date(endTime);
 
 		// Validate dates
-		if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+		if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) {
 			return "Unknown duration";
 		}
 
