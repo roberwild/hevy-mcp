@@ -94,7 +94,7 @@ export function registerWorkoutTools(
 		withErrorHandling(async () => {
 			const data = await hevyClient.v1.workouts.count.get();
 			// Use type assertion to access count property
-			const count = data ? (data as { count?: number }).count || 0 : 0;
+			const count = data ? (data as { workoutCount?: number }).workoutCount || 0 : 0;
 			return createJsonResponse({ count });
 		}, "get-workout-count"),
 	);
