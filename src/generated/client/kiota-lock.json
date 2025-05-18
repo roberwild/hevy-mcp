@@ -2,7 +2,7 @@
   "descriptionHash": "4881A963EEAB3D61005099FDFB166F564DB0CC73CB5D6CD07547C823CA24B7C795B02DA26147355D8AA8F58DF0A685F3CF9C71E8F6DF699E8BB79BCEF0C4826A",
   "descriptionLocation": "../../../openapi-spec.json",
   "lockFileVersion": "1.0.0",
-  "kiotaVersion": "1.24.2",
+  "kiotaVersion": "1.25.1",
   "clientClassName": "HevyClient",
   "typeAccessModifier": "Public",
   "clientNamespaceName": "ApiSdk",
