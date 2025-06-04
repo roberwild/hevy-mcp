@@ -10,10 +10,15 @@ import {
 } from "../utils/response-formatter.js";
 
 /**
+ * Type definition for exercise set types
+ */
+type SetType = 'warmup' | 'normal' | 'failure' | 'dropset';
+
+/**
  * Interface for exercise set input
  */
 interface ExerciseSetInput {
-	type: string;
+	type: SetType;
 	weightKg?: number | null;
 	reps?: number | null;
 	distanceMeters?: number | null;
@@ -60,7 +65,7 @@ export function registerWorkoutTools(
 				data?.workouts?.map((workout) => formatWorkout(workout)) || [];
 
 			if (workouts.length === 0) {
-				return createEmptyResponse("No workouts found");
+				return createEmptyResponse("No workouts found for the specified parameters");
 			}
 
 			return createJsonResponse(workouts);
@@ -120,7 +125,7 @@ export function registerWorkoutTools(
 			const events = data?.events || [];
 
 			if (events.length === 0) {
-				return createEmptyResponse(`No workout events found since ${since}`);
+				return createEmptyResponse(`No workout events found for the specified parameters since ${since}`);
 			}
 
 			return createJsonResponse(events);
@@ -194,7 +199,7 @@ export function registerWorkoutTools(
 				const data = await hevyClient.v1.workouts.post(requestBody);
 
 				if (!data) {
-					return createEmptyResponse("Failed to create workout");
+					return createEmptyResponse("Failed to create workout: Server returned no data");
 				}
 
 				const workout = formatWorkout(data);
@@ -289,7 +294,7 @@ export function registerWorkoutTools(
 					indent: 2,
 				});
 			},
-			"update-workout",
+			"update-workout-operation",
 		),
 	);
 }
