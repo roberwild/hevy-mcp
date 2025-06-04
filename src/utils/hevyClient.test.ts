@@ -49,7 +49,7 @@ describe("hevyClient", () => {
 			expect(ApiKeyAuthenticationProvider).toHaveBeenCalledWith(
 				apiKey,
 				"api-key",
-				"header",
+				ActualApiKeyLocation.Header, // Use the imported actual enum member
 			);
 
 			expect(FetchRequestAdapter).toHaveBeenCalled();
