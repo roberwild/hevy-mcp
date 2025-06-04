@@ -117,7 +117,7 @@ export function registerWorkoutTools(
 					content: [
 						{
 							type: "text",
-text: `Total workouts: ${data ? (data as { workoutCount?: number }).workoutCount || 0 : 0}`,
+							text: `Total workouts: ${data ? (data as { workoutCount?: number }).workoutCount || 0 : 0}`,
 						},
 					],
 				};
