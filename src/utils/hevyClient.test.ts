@@ -38,9 +38,9 @@ describe("hevyClient", () => {
 			vi.clearAllMocks();
 
 			// Mock implementation for FetchRequestAdapter
-			FetchRequestAdapter.mockImplementation(() => ({
-				baseUrl: "",
-			}));
+			// Mock implementation for FetchRequestAdapter
+			const mockAdapterInstance = { baseUrl: "" };
+			FetchRequestAdapter.mockImplementation(() => mockAdapterInstance);
 
 			// Act
 			const client = createClient(apiKey, baseUrl);
