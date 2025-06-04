@@ -4,12 +4,20 @@ import { describe, expect, it, vi } from "vitest";
 import { createClient } from "./hevyClient";
 
 // Mock the imported modules
-vi.mock("@microsoft/kiota-abstractions", () => ({
-	ApiKeyAuthenticationProvider: vi.fn(),
-	ApiKeyLocation: {
-		Header: "header",
-	},
-}));
+import { ApiKeyAuthenticationProvider, ApiKeyLocation as ActualApiKeyLocation } from "@microsoft/kiota-abstractions";
+import { FetchRequestAdapter } from "@microsoft/kiota-http-fetchlibrary";
+import { describe, expect, it, vi } from "vitest";
+import { createClient } from "./hevyClient";
+
+// Mock the imported modules
+vi.mock("@microsoft/kiota-abstractions", async () => {
+	const actual = await vi.importActual("@microsoft/kiota-abstractions");
+	return {
+		...actual, // Preserve other exports from the module
+		ApiKeyAuthenticationProvider: vi.fn(),
+		// ApiKeyLocation will be its actual enum implementation
+	};
+});
 
 vi.mock("@microsoft/kiota-http-fetchlibrary", () => ({
 	FetchRequestAdapter: vi.fn(),
