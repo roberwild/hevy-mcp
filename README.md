@@ -65,9 +65,9 @@ Make sure to replace `your-api-key-here` with your actual Hevy API key.
 
 ## Configuration
 
-Create a `.env` file in the project root with the following content:
+Create a `.env` file in the project root (you can copy from [.env.sample](.env.sample)) with the following content:
 
-```
+```env
 HEVY_API_KEY=your_hevy_api_key_here
 ```
 
@@ -92,7 +92,7 @@ npm start
 
 ## Available MCP Tools
 
-The server implements the following MCP tools:
+The server implements the following MCP tools for interacting with the Hevy API:
 
 ### Workout Tools
 - `get-workouts`: Fetch and format workout data
@@ -119,7 +119,7 @@ The server implements the following MCP tools:
 
 ## Project Structure
 
-```
+```plaintext
 hevy-mcp/
 ├── .env                   # Environment variables (API keys)
 ├── src/
@@ -138,7 +138,7 @@ hevy-mcp/
 └── tests/                 # Test suite
 ```
 
-## Development
+## Development Guide
 
 ### Code Style
 
@@ -150,7 +150,7 @@ npm run check
 
 ### Generating API Client
 
-The API client is generated from the OpenAPI specification using Kiota:
+The API client is generated from the OpenAPI specification using [Kiota](https://github.com/microsoft/kiota):
 
 ```bash
 npm run export-specs
@@ -159,11 +159,11 @@ npm run build:client
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
 
 ## Acknowledgements
 
