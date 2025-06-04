@@ -12,7 +12,7 @@ import {
 /**
  * Type definition for exercise set types
  */
-type SetType = 'warmup' | 'normal' | 'failure' | 'dropset';
+type SetType = "warmup" | "normal" | "failure" | "dropset";
 
 /**
  * Interface for exercise set input
@@ -65,7 +65,9 @@ export function registerWorkoutTools(
 				data?.workouts?.map((workout) => formatWorkout(workout)) || [];
 
 			if (workouts.length === 0) {
-				return createEmptyResponse("No workouts found for the specified parameters");
+				return createEmptyResponse(
+					"No workouts found for the specified parameters",
+				);
 			}
 
 			return createJsonResponse(workouts);
@@ -99,7 +101,9 @@ export function registerWorkoutTools(
 		withErrorHandling(async () => {
 			const data = await hevyClient.v1.workouts.count.get();
 			// Use type assertion to access count property
-			const count = data ? (data as { workoutCount?: number }).workoutCount || 0 : 0;
+			const count = data
+				? (data as { workoutCount?: number }).workoutCount || 0
+				: 0;
 			return createJsonResponse({ count });
 		}, "get-workout-count"),
 	);
@@ -125,7 +129,9 @@ export function registerWorkoutTools(
 			const events = data?.events || [];
 
 			if (events.length === 0) {
-				return createEmptyResponse(`No workout events found for the specified parameters since ${since}`);
+				return createEmptyResponse(
+					`No workout events found for the specified parameters since ${since}`,
+				);
 			}
 
 			return createJsonResponse(events);
@@ -199,7 +205,9 @@ export function registerWorkoutTools(
 				const data = await hevyClient.v1.workouts.post(requestBody);
 
 				if (!data) {
-					return createEmptyResponse("Failed to create workout: Server returned no data");
+					return createEmptyResponse(
+						"Failed to create workout: Server returned no data",
+					);
 				}
 
 				const workout = formatWorkout(data);
