@@ -1,3 +1,11 @@
+## [1.3.1](https://github.com/chrisdoc/hevy-mcp/compare/v1.3.0...v1.3.1) (2025-06-04)
+
+
+### Bug Fixes
+
+* resolve linting issues in error-handler.ts ([f418700](https://github.com/chrisdoc/hevy-mcp/commit/f41870028aa5d66adef2b237d39bcbc50d8d61dc))
+* resolve remaining linting issues ([643d037](https://github.com/chrisdoc/hevy-mcp/commit/643d03789043d8dd4bb563980581b679f6341908))
+
 # [1.3.0](https://github.com/chrisdoc/hevy-mcp/compare/v1.2.2...v1.3.0) (2025-04-11)
 
 
