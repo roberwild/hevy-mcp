@@ -55,8 +55,10 @@ describe("hevyClient", () => {
 			expect(FetchRequestAdapter).toHaveBeenCalled();
 
 			// Check that baseUrl was set correctly
-			const adapterInstance = FetchRequestAdapter.mock.results[0].value;
-			expect(adapterInstance.baseUrl).toBe(baseUrl);
+			// Check that baseUrl was set correctly on the specific mock instance
+			// (Assuming mockAdapterInstance is defined as per the suggestion for lines 33-35)
+			const mockAdapterInstance = (FetchRequestAdapter as any).mock.results[0].value; // Or retrieve via the suggested improved mock
+			expect(mockAdapterInstance.baseUrl).toBe(baseUrl);
 
 			// Check that the client was created and returned
 			expect(client).toEqual({ mockedClient: true });
