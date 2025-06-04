@@ -8,6 +8,24 @@ updates:
   - package-ecosystem: "npm" # See documentation for possible values
     directory: "/" # Location of package manifests
     groups:
+      microsoft-dependencies:
+        patterns:
+          - "@microsoft/*"
+      commitlint-dependencies:
+        patterns:
+          - "@commitlint/*"
+      semantic-release-dependencies:
+        patterns:
+          - "@semantic-release/*"
+          - "semantic-release"
+      vitest-dependencies:
+        patterns:
+          - "vitest"
+          - "@vitest/*"
+      biome-dependencies:
+        patterns:
+          - "@biomejs/*"
+      # fallback groups for any remaining prod/dev dependencies
       production-dependencies:
         dependency-type: "production"
       development-dependencies:
