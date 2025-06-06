@@ -98,12 +98,16 @@ describe("Hevy MCP Server Integration Tests", () => {
 
 			expect(result).toBeDefined();
 			expect(result.result).toBeDefined();
-			expect(result.result.workouts).toBeDefined();
-			expect(Array.isArray(result.result.workouts)).toBe(true);
-			expect(result.result.workouts.length).toBeGreaterThan(0);
-			expect(result.result.workouts[0].id).toBeDefined();
-			expect(result.result.workouts[0].title).toBeDefined();
-			expect(result.result.workouts[0].start_time).toBeDefined();
+
+			// Parse the JSON string in the result
+			const responseData = JSON.parse(result.result.content[0].text);
+
+			expect(responseData).toBeDefined();
+			expect(Array.isArray(responseData)).toBe(true);
+			expect(responseData.length).toBeGreaterThan(0);
+			expect(responseData[0].id).toBeDefined();
+			expect(responseData[0].name).toBeDefined(); // title is formatted as name
+			expect(responseData[0].date).toBeDefined(); // start_time is formatted as date
 		});
 	});
 });
