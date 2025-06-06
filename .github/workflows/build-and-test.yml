@@ -60,6 +60,16 @@ jobs:
     - name: Run build
       run: npm run build
 
+    - name: Check for HEVY_API_KEY
+      run: |
+        if [ -n "$HEVY_API_KEY" ]; then
+          echo "HEVY_API_KEY is set (value not shown for security)"
+        else
+          echo "HEVY_API_KEY is not set"
+        fi
+      env:
+        HEVY_API_KEY: ${{ secrets.HEVY_API_KEY }}
+
     - name: Run integration tests
       run: npx vitest run tests/integration
       env:

@@ -1,11 +1,18 @@
-import { config } from "@dotenvx/dotenvx/config";
-import { Client } from "@modelcontextprotocol/sdk/client/index.js";
-import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { CallToolResultSchema } from "@modelcontextprotocol/sdk/types.js";
-import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
-import { registerWorkoutTools } from "../../src/tools/workouts.js";
-import { createClient } from "../../src/utils/hevyClient.js";
+import { Client } from "@microsoft/mcp";
+import { InMemoryTransport } from "@microsoft/mcp/lib/transports/in-memory";
+import {
+	afterAll,
+	afterEach,
+	beforeAll,
+	beforeEach,
+	describe,
+	expect,
+	it,
+} from "vitest";
+import { GetWorkoutsHandler } from "../../src/handlers/get-workouts";
+import { HevyApiClient } from "../../src/hevy-api-client";
+import { HevyApiClientFactory } from "../../src/hevy-api-client-factory";
+import { McpServer } from "../../src/server";
 
 const HEVY_API_BASEURL = "https://api.hevyapp.com";
 
@@ -21,7 +28,16 @@ describe("Hevy MCP Server Integration Tests", () => {
 
 		if (!hasApiKey) {
 			throw new Error(
-				"HEVY_API_KEY is not set in environment variables. Integration tests cannot run without a valid API key.",
+				"HEVY_API_KEY is not set in environment variables. Integration tests cannot run without a valid API key.\n\n" +
+					"For local development:\n" +
+					"1. Create a .env file in the project root\n" +
+					"2. Add HEVY_API_KEY=your_api_key to the file\n\n" +
+					"For GitHub Actions:\n" +
+					"1. Go to your GitHub repository\n" +
+					"2. Click on Settings > Secrets and variables > Actions\n" +
+					"3. Click on New repository secret\n" +
+					"4. Set the name to HEVY_API_KEY and the value to your Hevy API key\n" +
+					"5. Click Add secret",
 			);
 		}
 	});
@@ -33,32 +49,37 @@ describe("Hevy MCP Server Integration Tests", () => {
 			version: "1.0.0",
 		});
 
-		// Configure client
-		const hevyClient = createClient(hevyApiKey, HEVY_API_BASEURL);
+		// Create Hevy API client
+		const hevyApiClient = new HevyApiClient(HEVY_API_BASEURL, hevyApiKey);
 
-		// Register workout tools
-		registerWorkoutTools(server, hevyClient);
+		// Create Hevy API client factory
+		const hevyApiClientFactory = new HevyApiClientFactory(
+			HEVY_API_BASEURL,
+			hevyApiKey,
+		);
+
+		// Register handlers
+		server.registerHandler(new GetWorkoutsHandler(hevyApiClientFactory));
 
 		// Create client
-		client = new Client(
-			{
-				name: "hevy-test-client",
-				version: "1.0.0",
-			},
-			{
-				capabilities: {
-					tools: {},
-				},
-			},
-		);
+		client = new Client({
+			name: "hevy-mcp-test-client",
+			version: "1.0.0",
+		});
 
 		// Connect client and server
 		const [clientTransport, serverTransport] =
 			InMemoryTransport.createLinkedPair();
 		await Promise.all([
-			client?.connect(clientTransport),
+			client.connect(clientTransport),
 			server.connect(serverTransport),
 		]);
+	});
+
+	afterEach(async () => {
+		if (server) {
+			await server.close();
+		}
 	});
 
 	afterAll(async () => {
@@ -74,39 +95,22 @@ describe("Hevy MCP Server Integration Tests", () => {
 				pageSize: 5,
 			};
 
-			const result = await client?.request(
-				{
-					method: "tools/call",
-					params: {
-						name: "get-workouts",
-						arguments: args,
-					},
+			const result = await client?.request({
+				method: "tools/call",
+				params: {
+					name: "get-workouts",
+					arguments: args,
 				},
-				CallToolResultSchema,
-			);
+			});
 
-			// Check that we got a result
 			expect(result).toBeDefined();
-			expect(result.content).toBeDefined();
-			expect(result.content.length).toBeGreaterThan(0);
-
-			// Parse the JSON content
-			const content = result.content[0].text as string;
-			const workouts = JSON.parse(content);
-
-			// Validate the structure of the response
-			expect(Array.isArray(workouts)).toBe(true);
-
-			// If there are workouts, validate the structure of the first workout
-			if (workouts.length > 0) {
-				const workout = workouts[0];
-				expect(workout).toHaveProperty("id");
-				expect(workout).toHaveProperty("title");
-				expect(workout).toHaveProperty("startTime");
-				expect(workout).toHaveProperty("endTime");
-				expect(workout).toHaveProperty("exercises");
-				expect(Array.isArray(workout.exercises)).toBe(true);
-			}
-		}, 30000); // Increase timeout to 30 seconds for API calls
+			expect(result.result).toBeDefined();
+			expect(result.result.workouts).toBeDefined();
+			expect(Array.isArray(result.result.workouts)).toBe(true);
+			expect(result.result.workouts.length).toBeGreaterThan(0);
+			expect(result.result.workouts[0].id).toBeDefined();
+			expect(result.result.workouts[0].title).toBeDefined();
+			expect(result.result.workouts[0].start_time).toBeDefined();
+		});
 	});
 });

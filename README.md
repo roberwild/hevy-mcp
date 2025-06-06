@@ -173,7 +173,15 @@ npx vitest run tests/integration
 
 **Note:** The integration tests will fail if the `HEVY_API_KEY` environment variable is not set. This is by design to ensure that the tests are always run with a valid API key.
 
-For GitHub Actions, the integration tests require the `HEVY_API_KEY` secret to be set in the repository settings.
+For GitHub Actions, the integration tests require the `HEVY_API_KEY` secret to be set in the repository settings:
+
+1. Go to your GitHub repository
+2. Click on "Settings" > "Secrets and variables" > "Actions"
+3. Click on "New repository secret"
+4. Set the name to `HEVY_API_KEY` and the value to your Hevy API key
+5. Click "Add secret"
+
+The GitHub Actions workflow will use this secret to authenticate with the Hevy API during integration tests.
 
 ### Generating API Client
 
