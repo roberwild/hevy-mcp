@@ -152,36 +152,33 @@ npm run check
 
 ### Testing
 
-#### Unit Tests
+#### Run All Tests
 
-Run the unit tests with:
+To run all tests (unit and integration), use:
 
 ```bash
 npm test
 ```
 
-#### Tests
+> **Note:** If the `HEVY_API_KEY` environment variable is set, integration tests will also run. If not, only unit tests will run.
 
-The project includes both unit tests and integration tests:
+#### Run Only Unit Tests
 
-##### Unit Tests
-
-Unit tests validate the functionality of individual components without external dependencies:
+To run only unit tests (excluding integration tests):
 
 ```bash
-# Run all unit tests
 npx vitest run --exclude tests/integration/**
+```
 
-# Run unit tests with coverage
+Or with coverage:
+
+```bash
 npx vitest run --coverage --exclude tests/integration/**
 ```
 
-##### Integration Tests
+#### Run Only Integration Tests
 
-Integration tests validate the MCP server's functionality with the real Hevy API. To run these tests:
-
-1. Make sure you have a valid Hevy API key in your `.env` file
-2. Run the integration tests:
+To run only the integration tests (requires a valid `HEVY_API_KEY`):
 
 ```bash
 npx vitest run tests/integration
