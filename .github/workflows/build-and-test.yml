@@ -74,7 +74,7 @@ jobs:
       - name: Export workflow
         uses: corentinmusard/otel-cicd-action@v2
         with:
-          otlpEndpoint: https://in-otel.hyperdx.io
+          otlpEndpoint: 'grpc://in-otel.hyperdx.io:4317/'
           otlpHeaders: ${{ secrets.HYPERDX_OTLP_HEADERS }}
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           runId: ${{ github.event.workflow_run.id }}
