@@ -136,6 +136,8 @@ hevy-mcp/
 │       └── validators.ts  # Input validation helpers
 ├── scripts/               # Build and utility scripts
 └── tests/                 # Test suite
+    ├── integration/       # Integration tests with real API
+    │   └── hevy-mcp.integration.test.ts  # MCP server integration tests
 ```
 
 ## Development Guide
@@ -147,6 +149,59 @@ This project uses Biome for code formatting and linting:
 ```bash
 npm run check
 ```
+
+### Testing
+
+#### Run All Tests
+
+To run all tests (unit and integration), use:
+
+```bash
+npm test
+```
+
+> **Note:** If the `HEVY_API_KEY` environment variable is set, integration tests will also run. If not, only unit tests will run.
+
+#### Run Only Unit Tests
+
+To run only unit tests (excluding integration tests):
+
+```bash
+npx vitest run --exclude tests/integration/**
+```
+
+Or with coverage:
+
+```bash
+npx vitest run --coverage --exclude tests/integration/**
+```
+
+#### Run Only Integration Tests
+
+To run only the integration tests (requires a valid `HEVY_API_KEY`):
+
+```bash
+npx vitest run tests/integration
+```
+
+**Note:** The integration tests will fail if the `HEVY_API_KEY` environment variable is not set. This is by design to ensure that the tests are always run with a valid API key.
+
+##### GitHub Actions Configuration
+
+For GitHub Actions:
+
+1. Unit tests will always run on every push and pull request
+2. Integration tests will only run if the `HEVY_API_KEY` secret is set in the repository settings
+
+To set up the `HEVY_API_KEY` secret:
+
+1. Go to your GitHub repository
+2. Click on "Settings" > "Secrets and variables" > "Actions"
+3. Click on "New repository secret"
+4. Set the name to `HEVY_API_KEY` and the value to your Hevy API key
+5. Click "Add secret"
+
+If the secret is not set, the integration tests step will be skipped with a message indicating that the API key is missing.
 
 ### Generating API Client
 
