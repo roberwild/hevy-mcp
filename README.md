@@ -160,9 +160,25 @@ Run the unit tests with:
 npm test
 ```
 
-#### Integration Tests
+#### Tests
 
-The project includes integration tests that validate the MCP server's functionality with the real Hevy API. To run these tests locally:
+The project includes both unit tests and integration tests:
+
+##### Unit Tests
+
+Unit tests validate the functionality of individual components without external dependencies:
+
+```bash
+# Run all unit tests
+npx vitest run --exclude tests/integration/**
+
+# Run unit tests with coverage
+npx vitest run --coverage --exclude tests/integration/**
+```
+
+##### Integration Tests
+
+Integration tests validate the MCP server's functionality with the real Hevy API. To run these tests:
 
 1. Make sure you have a valid Hevy API key in your `.env` file
 2. Run the integration tests:
@@ -173,7 +189,14 @@ npx vitest run tests/integration
 
 **Note:** The integration tests will fail if the `HEVY_API_KEY` environment variable is not set. This is by design to ensure that the tests are always run with a valid API key.
 
-For GitHub Actions, the integration tests require the `HEVY_API_KEY` secret to be set in the repository settings:
+##### GitHub Actions Configuration
+
+For GitHub Actions:
+
+1. Unit tests will always run on every push and pull request
+2. Integration tests will only run if the `HEVY_API_KEY` secret is set in the repository settings
+
+To set up the `HEVY_API_KEY` secret:
 
 1. Go to your GitHub repository
 2. Click on "Settings" > "Secrets and variables" > "Actions"
@@ -181,7 +204,7 @@ For GitHub Actions, the integration tests require the `HEVY_API_KEY` secret to b
 4. Set the name to `HEVY_API_KEY` and the value to your Hevy API key
 5. Click "Add secret"
 
-The GitHub Actions workflow will use this secret to authenticate with the Hevy API during integration tests.
+If the secret is not set, the integration tests step will be skipped with a message indicating that the API key is missing.
 
 ### Generating API Client
 
