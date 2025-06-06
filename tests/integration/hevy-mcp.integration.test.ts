@@ -20,17 +20,13 @@ describe("Hevy MCP Server Integration Tests", () => {
 		hasApiKey = !!hevyApiKey;
 
 		if (!hasApiKey) {
-			console.warn(
-				"HEVY_API_KEY is not set in environment variables. Integration tests will be skipped.",
+			throw new Error(
+				"HEVY_API_KEY is not set in environment variables. Integration tests cannot run without a valid API key.",
 			);
 		}
 	});
 
 	beforeEach(async () => {
-		if (!hasApiKey) {
-			return;
-		}
-
 		// Create server instance
 		server = new McpServer({
 			name: "hevy-mcp-test",
@@ -73,11 +69,6 @@ describe("Hevy MCP Server Integration Tests", () => {
 
 	describe("Get Workouts", () => {
 		it("should be able to get workouts", async () => {
-			if (!hasApiKey) {
-				// Skip test if no API key is available
-				return;
-			}
-
 			const args = {
 				page: 1,
 				pageSize: 5,

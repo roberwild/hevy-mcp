@@ -171,6 +171,8 @@ The project includes integration tests that validate the MCP server's functional
 npx vitest run tests/integration
 ```
 
+**Note:** The integration tests will fail if the `HEVY_API_KEY` environment variable is not set. This is by design to ensure that the tests are always run with a valid API key.
+
 For GitHub Actions, the integration tests require the `HEVY_API_KEY` secret to be set in the repository settings.
 
 ### Generating API Client
