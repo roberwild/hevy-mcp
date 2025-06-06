@@ -1,6 +1,9 @@
+import { config } from "dotenv";
+config();
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { CallToolResultSchema } from "@modelcontextprotocol/sdk/types.js";
 import {
 	afterAll,
 	afterEach,
@@ -10,10 +13,42 @@ import {
 	expect,
 	it,
 } from "vitest";
+import { z } from "zod";
 import { registerWorkoutTools } from "../../src/tools/workouts.js";
 import { createClient } from "../../src/utils/hevyClient.js";
 
 const HEVY_API_BASEURL = "https://api.hevyapp.com";
+
+// Zod schema for a formatted workout set
+const FormattedWorkoutSetSchema = z.object({
+	type: z.string().optional(),
+	weight: z.number().nullable().optional(),
+	reps: z.number().nullable().optional(),
+	distance: z.number().nullable().optional(),
+	duration: z.number().nullable().optional(),
+	rpe: z.number().nullable().optional(),
+	customMetric: z.number().nullable().optional(),
+});
+
+// Zod schema for a formatted workout exercise
+const FormattedWorkoutExerciseSchema = z.object({
+	name: z.string().optional(),
+	notes: z.string().nullable().optional(),
+	sets: z.array(FormattedWorkoutSetSchema).optional(),
+});
+
+// Zod schema for a formatted workout
+const FormattedWorkoutSchema = z.object({
+	id: z.string().optional(),
+	date: z.string().optional(),
+	name: z.string().optional(),
+	description: z.string().nullable().optional(),
+	duration: z.string(),
+	exercises: z.array(FormattedWorkoutExerciseSchema).optional(),
+});
+
+// Zod schema for the get-workouts response (array of formatted workouts)
+const GetWorkoutsResponseSchema = z.array(FormattedWorkoutSchema);
 
 describe("Hevy MCP Server Integration Tests", () => {
 	let server: McpServer | null = null;
@@ -88,19 +123,24 @@ describe("Hevy MCP Server Integration Tests", () => {
 				pageSize: 5,
 			};
 
-			const result = await client?.request({
-				method: "tools/call",
-				params: {
-					name: "get-workouts",
-					arguments: args,
+			if (!client) throw new Error("Client not initialized");
+
+			const result = await client.request(
+				{
+					method: "tools/call",
+					params: {
+						name: "get-workouts",
+						arguments: args,
+					},
 				},
-			});
+				CallToolResultSchema,
+			);
 
 			expect(result).toBeDefined();
-			expect(result.result).toBeDefined();
+			const responseData = JSON.parse(result.content[0].text as string);
 
-			// Parse the JSON string in the result
-			const responseData = JSON.parse(result.result.content[0].text);
+			// Validate the response schema with Zod
+			GetWorkoutsResponseSchema.parse(responseData);
 
 			expect(responseData).toBeDefined();
 			expect(Array.isArray(responseData)).toBe(true);
