@@ -136,6 +136,8 @@ hevy-mcp/
 │       └── validators.ts  # Input validation helpers
 ├── scripts/               # Build and utility scripts
 └── tests/                 # Test suite
+    ├── integration/       # Integration tests with real API
+    │   └── hevy-mcp.integration.test.ts  # MCP server integration tests
 ```
 
 ## Development Guide
@@ -147,6 +149,29 @@ This project uses Biome for code formatting and linting:
 ```bash
 npm run check
 ```
+
+### Testing
+
+#### Unit Tests
+
+Run the unit tests with:
+
+```bash
+npm test
+```
+
+#### Integration Tests
+
+The project includes integration tests that validate the MCP server's functionality with the real Hevy API. To run these tests locally:
+
+1. Make sure you have a valid Hevy API key in your `.env` file
+2. Run the integration tests:
+
+```bash
+npx vitest run tests/integration
+```
+
+For GitHub Actions, the integration tests require the `HEVY_API_KEY` secret to be set in the repository settings.
 
 ### Generating API Client
 
