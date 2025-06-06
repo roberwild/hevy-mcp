@@ -22,7 +22,12 @@ jobs:
           node-version-file: '.nvmrc'
       - run: npm ci
       - run: npm run build
-      - run: npm run test
+      - name: Run unit tests
+        run: npx vitest run --exclude tests/integration/**
+      - name: Run integration tests
+        run: npx vitest run tests/integration
+        env:
+          HEVY_API_KEY: ${{ secrets.HEVY_API_KEY }}
       - run: npm run release
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}

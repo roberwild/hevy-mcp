@@ -60,28 +60,11 @@ jobs:
     - name: Run build
       run: npm run build
 
-    - name: Check for HEVY_API_KEY
-      id: check_key
-      run: |
-        if [ -n "$HEVY_API_KEY" ]; then
-          echo "HEVY_API_KEY is set (value not shown for security)"
-          echo "has_key=true" >> $GITHUB_OUTPUT
-        else
-          echo "HEVY_API_KEY is not set - integration tests will be skipped"
-          echo "has_key=false" >> $GITHUB_OUTPUT
-        fi
-      env:
-        HEVY_API_KEY: ${{ secrets.HEVY_API_KEY }}
-
     - name: Run integration tests
-      if: steps.check_key.outputs.has_key == 'true'
       run: npx vitest run tests/integration
       env:
         HEVY_API_KEY: ${{ secrets.HEVY_API_KEY }}
-        
-    - name: Skip integration tests
-      if: steps.check_key.outputs.has_key != 'true'
-      run: echo "Skipping integration tests because HEVY_API_KEY is not set. Please add the HEVY_API_KEY secret to run integration tests."
+
   otel-cicd-action:
     if: always()
     name: OpenTelemetry Export Trace
