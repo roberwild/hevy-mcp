@@ -1,5 +1,6 @@
-import { Client } from "@microsoft/mcp";
-import { InMemoryTransport } from "@microsoft/mcp/lib/transports/in-memory";
+import { Client } from "@modelcontextprotocol/sdk/client/index.js";
+import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import {
 	afterAll,
 	afterEach,
@@ -9,10 +10,8 @@ import {
 	expect,
 	it,
 } from "vitest";
-import { GetWorkoutsHandler } from "../../src/handlers/get-workouts";
-import { HevyApiClient } from "../../src/hevy-api-client";
-import { HevyApiClientFactory } from "../../src/hevy-api-client-factory";
-import { McpServer } from "../../src/server";
+import { registerWorkoutTools } from "../../src/tools/workouts.js";
+import { createClient } from "../../src/utils/hevyClient.js";
 
 const HEVY_API_BASEURL = "https://api.hevyapp.com";
 
@@ -49,17 +48,11 @@ describe("Hevy MCP Server Integration Tests", () => {
 			version: "1.0.0",
 		});
 
-		// Create Hevy API client
-		const hevyApiClient = new HevyApiClient(HEVY_API_BASEURL, hevyApiKey);
+		// Create Hevy client
+		const hevyClient = createClient(hevyApiKey, HEVY_API_BASEURL);
 
-		// Create Hevy API client factory
-		const hevyApiClientFactory = new HevyApiClientFactory(
-			HEVY_API_BASEURL,
-			hevyApiKey,
-		);
-
-		// Register handlers
-		server.registerHandler(new GetWorkoutsHandler(hevyApiClientFactory));
+		// Register tools
+		registerWorkoutTools(server, hevyClient);
 
 		// Create client
 		client = new Client({
