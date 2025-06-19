@@ -13,7 +13,6 @@ automations:
       - commit
     if:
       - "{{ not pr.draft }}"
-      - "{{ not is.bot }}"
     run:
       - action: code-review@v1
         args:
@@ -26,7 +25,6 @@ automations:
       - commit
     if:
       - "{{ not pr.draft }}"
-      - "{{ not is.bot }}"
     run:
       - action: describe-changes@v1
         args:
@@ -38,9 +36,8 @@ automations:
       - pr_created
       - commit
     if:
-      - "{{ branch.name | includes(term=\"dependabot\") }}"
-      - "{{ branch.author | includes(term=\"dependabot\") }}"
-      - "{{ pr.author | includes(term=\"dependabot\") }}"
+      - {{ branch.name | includes(term="dependabot") }}
+      - {{ branch.author | includes(term="dependabot") }}
     run:
       - action: approve@v1
       - action: add-label@v1
@@ -55,12 +52,12 @@ automations:
         args:
           comment: |
             🤖 Dependabot PR automatically approved and merged by GitStream.
-            
+
             This PR has been automatically:
             - ✅ Approved
             - 🏷️ Labeled as `approved-dependabot`
             - 🔀 Merged (squash merge)
-            
+
             All status checks were required to pass before merging.
 
   # Add estimated review time label for all PRs
@@ -77,7 +74,6 @@ automations:
   label_safe_changes:
     if:
       - "{{ calc.safe_changes }}"
-      - "{{ not is.bot }}"
     run:
       - action: add-label@v1
         args:
@@ -103,4 +99,3 @@ is:
   docs: "{{ files | allDocs }}"
   tests: "{{ files | allTests }}"
   image: "{{ files | allImages }}"
-  bot: "{{ pr.author | match(list=['github-actions', '_bot_', '[bot]', 'dependabot']) | some }}"
