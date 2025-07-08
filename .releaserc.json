@@ -6,5 +6,11 @@
 		"@semantic-release/changelog",
 		"@semantic-release/npm",
 		"@semantic-release/git"
+	],
+	"releaseRules": [
+		{ "type": "docs", "release": "patch" },
+		{ "type": "chore", "release": "patch" },
+		{ "type": "refactor", "release": "patch" },
+		{ "type": "feat", "release": "minor" }
 	]
 }
