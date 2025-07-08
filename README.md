@@ -106,7 +106,7 @@ The server implements the following MCP tools for interacting with the Hevy API:
 - `get-routines`: Fetch and format routine data
 - `create-routine`: Create a new routine
 - `update-routine`: Update an existing routine
-- `get-routine`: Get a single routine by ID
+- `get-routine-by-id`: Get a single routine by ID using direct endpoint
 
 ### Exercise Template Tools
 - `get-exercise-templates`: Fetch exercise templates
@@ -116,6 +116,11 @@ The server implements the following MCP tools for interacting with the Hevy API:
 - `get-routine-folders`: Fetch routine folders
 - `create-routine-folder`: Create a new folder
 - `get-routine-folder`: Get a folder by ID
+
+### Webhook Tools
+- `get-webhook-subscription`: Get the current webhook subscription
+- `create-webhook-subscription`: Create a new webhook subscription
+- `delete-webhook-subscription`: Delete the current webhook subscription
 
 ## Project Structure
 
@@ -128,7 +133,8 @@ hevy-mcp/
 │   │   ├── workouts.ts    # Workout-related tools
 │   │   ├── routines.ts    # Routine-related tools
 │   │   ├── templates.ts   # Exercise template tools
-│   │   └── folders.ts     # Routine folder tools
+│   │   ├── folders.ts     # Routine folder tools
+│   │   └── webhooks.ts    # Webhook subscription tools
 │   ├── generated/         # API client (generated code)
 │   │   ├── client/        # Kubb-generated client
 │   │   │   ├── api/       # API client methods
