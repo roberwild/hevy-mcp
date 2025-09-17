@@ -57,12 +57,16 @@ codecov.yml
 lefthook.yml
 
 # Build tools config that aren't needed in container
-tsconfig.json
-tsup.config.ts
+# Keep tsup and tsconfig available for the builder stage
+# (needed to run tsup inside Docker)
 biome.json
 kubb.config.ts
 commitlint.config.js
 mise.toml
+
+# Re-include specific build configs required for bundling
+!tsup.config.ts
+!tsconfig.json
 
 # Temporary files
 tmp/

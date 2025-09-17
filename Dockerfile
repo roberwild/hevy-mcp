@@ -1,19 +1,19 @@
 # Multi-stage Docker build for hevy-mcp
 # Build stage
-FROM node:lts-alpine as builder
+FROM node:lts-alpine AS builder
 
 WORKDIR /app
 
 # Copy package files and install dependencies
 COPY package*.json ./
-RUN npm ci --ignore-scripts --no-optional
+RUN npm ci --ignore-scripts
 
 # Copy source code and build
 COPY . ./
 RUN npm run build
 
 # Production stage
-FROM node:lts-alpine as production
+FROM node:lts-alpine AS production
 
 WORKDIR /app
 
