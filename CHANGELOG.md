@@ -1,3 +1,10 @@
+## [1.9.2](https://github.com/chrisdoc/hevy-mcp/compare/v1.9.1...v1.9.2) (2025-09-18)
+
+
+### Bug Fixes
+
+* **dockerfile:** start command ([f86052b](https://github.com/chrisdoc/hevy-mcp/commit/f86052baee21c8d4b578e9fef0bdfda1a55dad03))
+
 ## [1.9.1](https://github.com/chrisdoc/hevy-mcp/compare/v1.9.0...v1.9.1) (2025-09-18)
 
 
