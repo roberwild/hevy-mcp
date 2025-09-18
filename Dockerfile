@@ -35,4 +35,4 @@ USER nodejs
 
 ENV NODE_ENV=production
 
-CMD [ "npm", "start:http" ]
+CMD [ "npm", "run" "start:http" ]
