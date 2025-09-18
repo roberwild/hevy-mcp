@@ -35,7 +35,10 @@ jobs:
           HEVY_API_KEY: ${{ secrets.HEVY_API_KEY }}
       - name: Store initial version
         id: initial_version
-        run: echo "version=$(node -p \"require('./package.json').version\")" >> $GITHUB_OUTPUT
+        run: |
+          set -euo pipefail
+          VERSION=$(node -p "JSON.parse(require('fs').readFileSync('package.json','utf8')).version")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
       
       - name: Release
         id: release_step
@@ -47,13 +50,16 @@ jobs:
       - name: Check if release was created
         id: release
         run: |
-          NEW_VERSION=$(node -p "require('./package.json').version")
+          set -euo pipefail
+          NEW_VERSION=$(node -p "JSON.parse(require('fs').readFileSync('package.json','utf8')).version")
           if [ "$NEW_VERSION" != "${{ steps.initial_version.outputs.version }}" ]; then
-            echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
-            echo "released=true" >> $GITHUB_OUTPUT
+            {
+              echo "version=$NEW_VERSION"
+              echo "released=true"
+            } >> "$GITHUB_OUTPUT"
             echo "Release created: $NEW_VERSION"
           else
-            echo "released=false" >> $GITHUB_OUTPUT
+            echo "released=false" >> "$GITHUB_OUTPUT"
             echo "No release created"
           fi
         env:
