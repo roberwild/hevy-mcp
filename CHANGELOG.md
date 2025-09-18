@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/chrisdoc/hevy-mcp/compare/v1.9.3...v1.10.0) (2025-09-18)
+
+
+### Features
+
+* **arguments:** add possibility to provide key as argument ([91948a7](https://github.com/chrisdoc/hevy-mcp/commit/91948a7f032886cb22c368e73791e1c5181c3f22))
+
 ## [1.9.3](https://github.com/chrisdoc/hevy-mcp/compare/v1.9.2...v1.9.3) (2025-09-18)
 
 
