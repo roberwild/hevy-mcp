@@ -8,14 +8,13 @@ startCommand:
   configSchema:
     # JSON Schema defining the configuration options for the MCP.
     type: object
-    required:
-      - hevyApiKey
+    required: ["hevy-api-key"]
     properties:
-      hevyApiKey:
+      hevy-api-key:
         type: string
         description: Your Hevy API key to authenticate with the Hevy Fitness API.
   exampleConfig:
-    hevyApiKey: "your-hevy-api-key-here"
+    hevy-api-key: "your-hevy-api-key-here"
 build:
   dockerfile: "Dockerfile"
   dockerBuildPath: "."

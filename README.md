@@ -64,13 +64,28 @@ Make sure to replace `your-api-key-here` with your actual Hevy API key.
 
 ## Configuration
 
-Create a `.env` file in the project root (you can copy from [.env.sample](.env.sample)) with the following content:
+You can supply your Hevy API key in two ways:
+
+1. Environment variable (`HEVY_API_KEY`)
+2. Command-line argument (`--hevy-api-key=your_key` or `hevy-api-key=your_key` after `--` when using npm scripts)
+
+Create a `.env` file in the project root (you can copy from [.env.sample](.env.sample)) with the following content if using the environment variable approach:
 
 ```env
 HEVY_API_KEY=your_hevy_api_key_here
 ```
 
-Replace `your_hevy_api_key_here` with your actual Hevy API key.
+Replace `your_hevy_api_key_here` with your actual Hevy API key. If you prefer the command argument approach you can skip setting the environment variable and start the server with for example:
+
+```bash
+npm start -- --hevy-api-key=your_hevy_api_key_here
+```
+
+Or in HTTP mode:
+
+```bash
+npm start -- --http --hevy-api-key=your_hevy_api_key_here
+```
 
 ## Transport Modes
 
@@ -91,10 +106,12 @@ node dist/index.js
 The server can also run in HTTP mode for remote access or web-based integrations:
 
 ```bash
-# Start in HTTP mode
+# Start in HTTP mode (env var)
 npm start -- --http
-# or
-node dist/index.js --http
+# Start in HTTP mode (CLI arg)
+npm start -- --http --hevy-api-key=your_hevy_api_key_here
+# Or using node directly
+node dist/index.js --http --hevy-api-key=your_hevy_api_key_here
 
 # Using environment variable
 MCP_TRANSPORT=http npm start
@@ -161,6 +178,13 @@ docker run -d \
   -e HEVY_API_KEY=your_api_key_here \
   -p 3000:3000 \
   ghcr.io/chrisdoc/hevy-mcp:latest
+
+# Or using CLI argument for the key (omit env var)
+docker run -d \
+  --name hevy-mcp \
+  -p 3000:3000 \
+  ghcr.io/chrisdoc/hevy-mcp:latest \
+  hevy-api-key=your_api_key_here
 ```
 
 #### Building Locally
@@ -175,6 +199,13 @@ docker run -d \
   -e HEVY_API_KEY=your_api_key_here \
   -p 3000:3000 \
   hevy-mcp
+
+# Or with CLI argument
+docker run -d \
+  --name hevy-mcp \
+  -p 3000:3000 \
+  hevy-mcp \
+  hevy-api-key=your_api_key_here
 ```
 
 #### Docker Compose Example
