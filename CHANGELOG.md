@@ -1,3 +1,10 @@
+## [1.10.1](https://github.com/chrisdoc/hevy-mcp/compare/v1.10.0...v1.10.1) (2025-09-18)
+
+
+### Bug Fixes
+
+* **smithery:** fix smithery.yaml ([e70244f](https://github.com/chrisdoc/hevy-mcp/commit/e70244fd55a55356f043df7d09d43ddea2e807ec))
+
 # [1.10.0](https://github.com/chrisdoc/hevy-mcp/compare/v1.9.3...v1.10.0) (2025-09-18)
 
 
