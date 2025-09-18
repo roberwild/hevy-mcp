@@ -1,3 +1,10 @@
+## [1.9.3](https://github.com/chrisdoc/hevy-mcp/compare/v1.9.2...v1.9.3) (2025-09-18)
+
+
+### Bug Fixes
+
+* **dockfile:** cmd ([3e40c0d](https://github.com/chrisdoc/hevy-mcp/commit/3e40c0de4e0e5bfaf34973f2bcad443839715848))
+
 ## [1.9.2](https://github.com/chrisdoc/hevy-mcp/compare/v1.9.1...v1.9.2) (2025-09-18)
 
 
