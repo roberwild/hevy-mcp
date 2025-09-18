@@ -1,3 +1,10 @@
+## [1.9.1](https://github.com/chrisdoc/hevy-mcp/compare/v1.9.0...v1.9.1) (2025-09-18)
+
+
+### Bug Fixes
+
+* **docker:** fix dockerfile for smithery ([903e0e0](https://github.com/chrisdoc/hevy-mcp/commit/903e0e0adbbbb5a5f8f323fd67246c2c930395c9))
+
 # [1.9.0](https://github.com/chrisdoc/hevy-mcp/compare/v1.8.10...v1.9.0) (2025-09-18)
 
 
