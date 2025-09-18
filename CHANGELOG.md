@@ -1,3 +1,17 @@
+# [1.9.0](https://github.com/chrisdoc/hevy-mcp/compare/v1.8.10...v1.9.0) (2025-09-18)
+
+
+### Bug Fixes
+
+* **docekr:** fix docker image ([a6416a3](https://github.com/chrisdoc/hevy-mcp/commit/a6416a38934c95409366f63feea9687cbb55c1f1))
+* **misc:** fix package.json parsing ([00cb197](https://github.com/chrisdoc/hevy-mcp/commit/00cb19729bc2e7ed42160d55a73a70f5316436ae))
+* **plan:** remove plan ([86263e4](https://github.com/chrisdoc/hevy-mcp/commit/86263e44442c53edfd28dfc62cc5b84665fe4b31))
+
+
+### Features
+
+* add Docker image building to CI/CD workflows ([#124](https://github.com/chrisdoc/hevy-mcp/issues/124)) ([760963e](https://github.com/chrisdoc/hevy-mcp/commit/760963e0fad219c8f80b9b259911a0573637558b))
+
 ## [1.8.10](https://github.com/chrisdoc/hevy-mcp/compare/v1.8.9...v1.8.10) (2025-09-17)
 
 ## [1.8.9](https://github.com/chrisdoc/hevy-mcp/compare/v1.8.8...v1.8.9) (2025-09-17)
