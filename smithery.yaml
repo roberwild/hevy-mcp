@@ -1,6 +1,6 @@
 # Smithery configuration file: https://smithery.ai/docs/config#smitheryyaml
 
-runtime: "typescript"
+runtime: "container"
 env:
   MCP_TRANSPORT: "http"
 startCommand:
@@ -16,3 +16,6 @@ startCommand:
         description: Your Hevy API key to authenticate with the Hevy Fitness API.
   exampleConfig:
     hevyApiKey: "your-hevy-api-key-here"
+build:
+  dockerfile: "Dockerfile"
+  dockerBuildPath: "."

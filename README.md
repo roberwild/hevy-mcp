@@ -110,7 +110,7 @@ MCP_TRANSPORT=http
 
 # HTTP server configuration
 MCP_HTTP_HOST=127.0.0.1
-MCP_HTTP_PORT=3000
+PORT=3000
 
 # DNS rebinding protection (recommended for production)
 MCP_DNS_REBINDING_PROTECTION=true
@@ -188,7 +188,7 @@ services:
       - HEVY_API_KEY=your_api_key_here
       - MCP_TRANSPORT=http
       - MCP_HTTP_HOST=0.0.0.0
-      - MCP_HTTP_PORT=3000
+      - PORT=3000
     ports:
       - "3000:3000"
     restart: unless-stopped

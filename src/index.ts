@@ -20,7 +20,7 @@ const transportMode =
 	args.includes("--http") || process.env.MCP_TRANSPORT === "http"
 		? "http"
 		: "stdio";
-const httpPort = Number.parseInt(process.env.MCP_HTTP_PORT || "3000", 10);
+const httpPort = Number.parseInt(process.env.PORT || "3000", 10);
 const httpHost = process.env.MCP_HTTP_HOST || "127.0.0.1";
 const enableDnsRebindingProtection =
 	process.env.MCP_DNS_REBINDING_PROTECTION === "true";
