@@ -1,11 +1,12 @@
 // api/index.js
 
-const { startHttpServer } = require("../dist/utils/httpServer");
-const { default: dotenv } = require("dotenv");
+import dotenv from "dotenv";
+import { createRequire } from "module";
+import { startHttpServer } from "../dist/utils/httpServer.js";
 
 dotenv.config();
 
-module.exports = async (req, res) => {
+export default async (req, res) => {
 	try {
 		if (req.method === "GET" && req.url === "/health") {
 			res.statusCode = 200;
