@@ -1,22 +1,34 @@
 // api/index.js
 
-const { startHttpServer } = require('../dist/utils/httpServer');
-const { default: dotenv } = require('dotenv');
+const { startHttpServer } = require("../dist/utils/httpServer");
+const { default: dotenv } = require("dotenv");
 
 dotenv.config();
 
 module.exports = async (req, res) => {
-  if (req.method === 'GET' && req.url === '/health') {
-    res.statusCode = 200;
-    res.end('OK');
-    return;
-  }
+	try {
+		if (req.method === "GET" && req.url === "/health") {
+			res.statusCode = 200;
+			res.end("OK");
+			return;
+		}
 
-  // ⚠️ OJO: esto crea el servidor en cada request (no ideal, pero válido en serverless)
-  const { default: { main } } = await import('../dist/index.js');
-  await main();
+		const mod = await import("../dist/index.js");
+		const main = mod?.default?.main ?? mod?.main;
 
-  // Podrías mejorar esto almacenando el servidor en memoria, pero así funciona por ahora
-  res.statusCode = 200;
-  res.end('Hevy MCP launched (check logs)');
+		if (typeof main !== "function") {
+			throw new Error(
+				"No se encontró la función `main` exportada en dist/index.js",
+			);
+		}
+
+		await main();
+
+		res.statusCode = 200;
+		res.end("Hevy MCP launched (check logs)");
+	} catch (err) {
+		console.error("❌ Error en la función API:", err);
+		res.statusCode = 500;
+		res.end(`Error interno: ${err.message}`);
+	}
 };
