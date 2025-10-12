@@ -67,5 +67,6 @@ runServer().catch((error) => {
 
 export async function main() {
 	await server.listen(); // o .start() si usas otro método
-  }
-  
+}
+
+export default { main };
