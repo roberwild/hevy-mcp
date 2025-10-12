@@ -1,18 +1,15 @@
 {
+  "version": 2,
   "builds": [
     {
-      "src": "dist/index.js",
+      "src": "api/index.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
-      "src": "/ultimo-entreno",
-      "dest": "dist/index.js"
-    },
-    {
-      "src": "/.*",
-      "dest": "dist/index.js"
+      "src": "/(.*)",
+      "dest": "api/index.js"
     }
   ]
 }
