@@ -97,6 +97,44 @@ const hevyClient = {
 		};
 	},
 
+	async getRoutines({ page = 1, pageSize = 5 }) {
+		const data = await this.makeRequest(
+			`/routines?page=${page}&pageSize=${pageSize}`,
+		);
+		return {
+			routines: data.routines || [],
+			totalCount: data.page_count
+				? data.page_count * pageSize
+				: data.routines?.length || 0,
+			page: data.page || page,
+			pageSize,
+		};
+	},
+
+	async searchExerciseTemplates(query: string) {
+		const data = await this.makeRequest(
+			`/exercise_templates?search=${encodeURIComponent(query)}`,
+		);
+		return {
+			exerciseTemplates: data.exercise_templates || [],
+			message: `Encontrados ${data.exercise_templates?.length || 0} ejercicios para "${query}"`,
+		};
+	},
+
+	async getExerciseTemplates({ page = 1, pageSize = 20 }) {
+		const data = await this.makeRequest(
+			`/exercise_templates?page=${page}&pageSize=${pageSize}`,
+		);
+		return {
+			exerciseTemplates: data.exercise_templates || [],
+			totalCount: data.page_count
+				? data.page_count * pageSize
+				: data.exercise_templates?.length || 0,
+			page: data.page || page,
+			pageSize,
+		};
+	},
+
 	async createRoutine(routineData: Record<string, unknown>) {
 		// Prepare payload exactly as Hevy API expects
 		const hevyRoutineData = {
@@ -165,8 +203,10 @@ app.post("/mcp", async (req, res) => {
 						"getLastWorkout",
 						"getLastWorkouts",
 						"getWorkouts",
-						"createRoutine",
 						"getRoutines",
+						"createRoutine",
+						"getExerciseTemplates",
+						"searchExerciseTemplates",
 					],
 					capabilities:
 						"✅ CRUD completo sin timeouts - Perfecto para crear rutinas",
@@ -213,12 +253,67 @@ app.post("/mcp", async (req, res) => {
 				break;
 			}
 
+			case "getRoutines": {
+				const routinesData = await hevyClient.getRoutines({
+					page: params.page || 1,
+					pageSize: params.pageSize || 5,
+				});
+				result = {
+					...routinesData,
+					message: "✅ Rutinas obtenidas de Hevy API",
+					server: "Railway",
+				};
+				break;
+			}
+
+			case "getExerciseTemplates": {
+				const exerciseData = await hevyClient.getExerciseTemplates({
+					page: params.page || 1,
+					pageSize: params.pageSize || 20,
+				});
+				result = {
+					...exerciseData,
+					message: "✅ Plantillas de ejercicios obtenidas de Hevy API",
+					server: "Railway",
+				};
+				break;
+			}
+
+			case "searchExerciseTemplates": {
+				const searchQuery = params.query || params.search || "";
+				if (!searchQuery) {
+					result = {
+						error: "Se requiere un término de búsqueda",
+						server: "Railway",
+					};
+				} else {
+					const searchResults =
+						await hevyClient.searchExerciseTemplates(searchQuery);
+					result = {
+						...searchResults,
+						message: `✅ Búsqueda de ejercicios completada para "${searchQuery}"`,
+						server: "Railway",
+					};
+				}
+				break;
+			}
+
 			default:
 				result = {
 					message: `Método ${method} recibido pero no implementado aún`,
 					params,
 					server: "Railway Simple HTTP Server",
 					timestamp: new Date().toISOString(),
+					availableMethods: [
+						"help",
+						"getLastWorkout",
+						"getLastWorkouts",
+						"getWorkouts",
+						"getRoutines",
+						"createRoutine",
+						"getExerciseTemplates",
+						"searchExerciseTemplates",
+					],
 				};
 		}
 
