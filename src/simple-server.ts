@@ -136,11 +136,10 @@ const hevyClient = {
 	},
 
 	async createRoutine(routineData: Record<string, unknown>) {
-		// Prepare payload exactly as Hevy API expects
+		// Prepare payload exactly as Hevy API expects (NO routine_folder_id)
 		const hevyRoutineData = {
 			routine: {
 				title: routineData.title,
-				routine_folder_id: routineData.routine_folder_id || null,
 				exercises: routineData.exercises || [
 					{
 						exercise_template_id: "79D0BB3A", // Press de Banca por defecto
@@ -242,7 +241,6 @@ app.post("/mcp", async (req, res) => {
 			case "createRoutine": {
 				const routineResult = await hevyClient.createRoutine({
 					title: params.title || "Nueva Rutina",
-					routine_folder_id: params.routine_folder_id,
 					exercises: params.exercises,
 				});
 				result = {
