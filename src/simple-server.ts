@@ -28,26 +28,13 @@ const hevyClient = {
 
 	async makeRequest(endpoint: string, options: Record<string, unknown> = {}) {
 		const url = `${this.baseURL}${endpoint}`;
-
-		// Use session-based auth for createRoutine with folder selection, api-key for everything else
-		const useSessionAuth =
-			options.method === "POST" && endpoint.includes("/routines");
-
 		const headers: Record<string, string> = {
 			accept: "application/json",
+			"api-key": this.apiKey,
+			"X-API-Key": this.apiKey,
 			"Content-Type": "application/json",
 			...((options.headers as Record<string, string>) || {}),
 		};
-
-		// Choose authentication method
-		if (useSessionAuth && process.env.HEVY_SESSION_ID) {
-			headers["x-hevy-session-id"] = process.env.HEVY_SESSION_ID;
-			console.log("🔐 Using session-based auth for routine creation");
-		} else {
-			headers["api-key"] = this.apiKey;
-			headers["X-API-Key"] = this.apiKey;
-			console.log("🔑 Using API key auth");
-		}
 
 		console.log(`🌐 Llamando a Hevy API: ${options.method || "GET"} ${url}`);
 		if (options.body) {
@@ -204,11 +191,8 @@ const hevyClient = {
 					"/routines?page=1&pageSize=1",
 				);
 				if (existingRoutines.routines && existingRoutines.routines.length > 0) {
-					validFolderId = existingRoutines.routines[0].routine_folder_id;
-					console.log(
-						"✅ routine_folder_id por defecto encontrado:",
-						validFolderId,
-					);
+					validFolderId = existingRoutines.routines[0].folder_id; // Correct field name
+					console.log("✅ folder_id por defecto encontrado:", validFolderId);
 				}
 			} catch (routineError) {
 				console.log("⚠️ Error obteniendo rutinas existentes:", routineError);
@@ -232,11 +216,11 @@ const hevyClient = {
 		// Helper function to remove undefined/null values recursively
 		const removeUndefined = (obj: any) => JSON.parse(JSON.stringify(obj));
 
-		// Prepare payload with valid routine_folder_id
+		// Prepare payload with valid folder_id (NOT routine_folder_id!)
 		const hevyRoutineData = removeUndefined({
 			routine: {
 				title: title || "Nueva Rutina",
-				routine_folder_id: validFolderId, // Use the valid folder ID we found
+				folder_id: validFolderId, // Hevy uses "folder_id", not "routine_folder_id"
 				exercises: exercises || [
 					{
 						exercise_template_id: "79D0BB3A", // Press de Banca por defecto
@@ -251,7 +235,7 @@ const hevyClient = {
 		});
 
 		console.log(
-			"🔍 Debug - Payload FINAL con routine_folder_id válido:",
+			"🔍 Debug - Payload FINAL con folder_id válido:",
 			JSON.stringify(hevyRoutineData, null, 2),
 		);
 
