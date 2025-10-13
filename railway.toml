@@ -4,6 +4,10 @@
 [build]
 builder = "NIXPACKS"
 
+# Deployment configuration
+[deploy]
+startCommand = "npm run start:railway"
+
 # Environment variables will be set in Railway dashboard
 [env]
 NODE_ENV = "production"
