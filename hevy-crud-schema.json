@@ -56,6 +56,7 @@
 											"getMaxWeightWorkout",
 											"searchWorkouts",
 											"getRoutines",
+											"getRoutineFolders",
 											"createRoutine",
 											"updateRoutine",
 											"createWorkout",
@@ -112,6 +113,10 @@
 											"title": {
 												"type": "string",
 												"description": "Título de la rutina o entrenamiento"
+											},
+											"folderName": {
+												"type": "string",
+												"description": "Nombre de la carpeta donde crear la rutina (ej: 'Rehabilitacion', 'Fuerza'). Si no se especifica, se usa la carpeta por defecto."
 											},
 											"description": {
 												"type": "string",

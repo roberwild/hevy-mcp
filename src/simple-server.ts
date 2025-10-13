@@ -135,45 +135,86 @@ const hevyClient = {
 		};
 	},
 
-	async createRoutine(routineData: Record<string, unknown>) {
-		// First, get existing routines to find a valid routine_folder_id
-		console.log(
-			"🔍 Obteniendo routine_folder_id válido desde rutinas existentes...",
+	async getRoutineFolders({ page = 1, pageSize = 5 }) {
+		const data = await this.makeRequest(
+			`/routine_folders?page=${page}&pageSize=${pageSize}`,
 		);
+		return {
+			routineFolders: data.routine_folders || [],
+			totalCount: data.page_count
+				? data.page_count * pageSize
+				: data.routine_folders?.length || 0,
+			page: data.page || page,
+			pageSize,
+		};
+	},
+
+	async createRoutine(routineData: Record<string, unknown>) {
+		// Extract fields including folder preference
+		const { title, exercises, folderName } = routineData;
 
 		let validFolderId = null;
 
-		try {
-			const existingRoutines = await this.makeRequest(
-				"/routines?page=1&pageSize=1",
-			);
-
-			if (existingRoutines.routines && existingRoutines.routines.length > 0) {
-				validFolderId = existingRoutines.routines[0].routine_folder_id;
-				console.log("✅ routine_folder_id válido encontrado:", validFolderId);
-			}
-
-			// If no valid folder ID found, try to get it from routine folders endpoint
-			if (!validFolderId) {
-				console.log(
-					"🔍 Intentando obtener folder ID desde /routine_folders...",
-				);
-				try {
-					const folders = await this.makeRequest("/routine_folders");
-					if (folders.routine_folders && folders.routine_folders.length > 0) {
-						validFolderId = folders.routine_folders[0].id;
-						console.log("✅ routine_folder_id desde folders:", validFolderId);
+		// If user specified a folder name, try to find its ID
+		if (folderName) {
+			console.log(`🔍 Buscando carpeta "${folderName}"...`);
+			try {
+				const folders = await this.makeRequest("/routine_folders");
+				if (folders.routine_folders && folders.routine_folders.length > 0) {
+					const targetFolder = folders.routine_folders.find((folder: any) =>
+						folder.title
+							?.toLowerCase()
+							.includes(folderName.toString().toLowerCase()),
+					);
+					if (targetFolder) {
+						validFolderId = targetFolder.id;
+						console.log(
+							`✅ Carpeta "${folderName}" encontrada con ID:`,
+							validFolderId,
+						);
+					} else {
+						console.log(
+							`⚠️ Carpeta "${folderName}" no encontrada, usando carpeta por defecto`,
+						);
 					}
-				} catch (folderError) {
-					console.log("⚠️ No se pudo obtener folders, usando null");
 				}
+			} catch (folderError) {
+				console.log("⚠️ Error obteniendo carpetas:", folderError);
 			}
-		} catch (routineError) {
-			console.log("⚠️ Error obteniendo rutinas existentes:", routineError);
 		}
 
-		// Extract only valid fields
-		const { title, exercises } = routineData;
+		// If no specific folder found or specified, get default from existing routines
+		if (!validFolderId) {
+			console.log("🔍 Obteniendo routine_folder_id por defecto...");
+			try {
+				const existingRoutines = await this.makeRequest(
+					"/routines?page=1&pageSize=1",
+				);
+				if (existingRoutines.routines && existingRoutines.routines.length > 0) {
+					validFolderId = existingRoutines.routines[0].routine_folder_id;
+					console.log(
+						"✅ routine_folder_id por defecto encontrado:",
+						validFolderId,
+					);
+				}
+			} catch (routineError) {
+				console.log("⚠️ Error obteniendo rutinas existentes:", routineError);
+			}
+		}
+
+		// If still no folder ID, try to get first available folder
+		if (!validFolderId) {
+			console.log("🔍 Intentando obtener primera carpeta disponible...");
+			try {
+				const folders = await this.makeRequest("/routine_folders");
+				if (folders.routine_folders && folders.routine_folders.length > 0) {
+					validFolderId = folders.routine_folders[0].id;
+					console.log("✅ Primera carpeta disponible:", validFolderId);
+				}
+			} catch (_folderError) {
+				console.log("⚠️ No se pudo obtener carpetas");
+			}
+		}
 
 		// Helper function to remove undefined/null values recursively
 		const removeUndefined = (obj: any) => JSON.parse(JSON.stringify(obj));
@@ -251,6 +292,7 @@ app.post("/mcp", async (req, res) => {
 						"getLastWorkouts",
 						"getWorkouts",
 						"getRoutines",
+						"getRoutineFolders",
 						"createRoutine",
 						"getExerciseTemplates",
 						"searchExerciseTemplates",
@@ -290,6 +332,7 @@ app.post("/mcp", async (req, res) => {
 				const routineResult = await hevyClient.createRoutine({
 					title: params.title || "Nueva Rutina",
 					exercises: params.exercises,
+					folderName: params.folderName || params.folder, // Support both parameter names
 				});
 				result = {
 					...routineResult,
@@ -307,6 +350,19 @@ app.post("/mcp", async (req, res) => {
 				result = {
 					...routinesData,
 					message: "✅ Rutinas obtenidas de Hevy API",
+					server: "Railway",
+				};
+				break;
+			}
+
+			case "getRoutineFolders": {
+				const foldersData = await hevyClient.getRoutineFolders({
+					page: params.page || 1,
+					pageSize: params.pageSize || 5,
+				});
+				result = {
+					...foldersData,
+					message: "✅ Carpetas de rutinas obtenidas de Hevy API",
 					server: "Railway",
 				};
 				break;
@@ -356,6 +412,7 @@ app.post("/mcp", async (req, res) => {
 						"getLastWorkouts",
 						"getWorkouts",
 						"getRoutines",
+						"getRoutineFolders",
 						"createRoutine",
 						"getExerciseTemplates",
 						"searchExerciseTemplates",
