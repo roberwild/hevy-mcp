@@ -142,8 +142,11 @@ const hevyClient = {
 		// Extract only valid fields, filtering out undefined values
 		const { title, exercises } = routineData;
 
+		// Helper function to remove undefined/null values recursively
+		const removeUndefined = (obj: any) => JSON.parse(JSON.stringify(obj));
+
 		// Prepare payload exactly as Hevy API expects (NO routine_folder_id at all)
-		const hevyRoutineData = {
+		const hevyRoutineData = removeUndefined({
 			routine: {
 				title: title || "Nueva Rutina",
 				exercises: exercises || [
@@ -157,14 +160,10 @@ const hevyClient = {
 					},
 				],
 			},
-		};
-
-		// 💥 FORCE DELETE any routine_folder_id that might exist anywhere
-		delete (hevyRoutineData.routine as any).routine_folder_id;
-		delete (hevyRoutineData as any).routine_folder_id;
+		});
 
 		console.log(
-			"🔍 Debug - Payload para createRoutine:",
+			"🔍 Debug - Payload LIMPIO para createRoutine:",
 			JSON.stringify(hevyRoutineData, null, 2),
 		);
 
