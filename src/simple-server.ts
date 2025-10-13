@@ -136,6 +136,9 @@ const hevyClient = {
 	},
 
 	async createRoutine(routineData: Record<string, unknown>) {
+		// 💥 FORCE DELETE routine_folder_id from input params first
+		delete (routineData as any).routine_folder_id;
+
 		// Extract only valid fields, filtering out undefined values
 		const { title, exercises } = routineData;
 
@@ -155,6 +158,10 @@ const hevyClient = {
 				],
 			},
 		};
+
+		// 💥 FORCE DELETE any routine_folder_id that might exist anywhere
+		delete (hevyRoutineData.routine as any).routine_folder_id;
+		delete (hevyRoutineData as any).routine_folder_id;
 
 		console.log(
 			"🔍 Debug - Payload para createRoutine:",
