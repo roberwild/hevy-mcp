@@ -28,13 +28,26 @@ const hevyClient = {
 
 	async makeRequest(endpoint: string, options: Record<string, unknown> = {}) {
 		const url = `${this.baseURL}${endpoint}`;
+
+		// Use session-based auth for createRoutine with folder selection, api-key for everything else
+		const useSessionAuth =
+			options.method === "POST" && endpoint.includes("/routines");
+
 		const headers: Record<string, string> = {
 			accept: "application/json",
-			"api-key": this.apiKey,
-			"X-API-Key": this.apiKey,
 			"Content-Type": "application/json",
 			...((options.headers as Record<string, string>) || {}),
 		};
+
+		// Choose authentication method
+		if (useSessionAuth && process.env.HEVY_SESSION_ID) {
+			headers["x-hevy-session-id"] = process.env.HEVY_SESSION_ID;
+			console.log("🔐 Using session-based auth for routine creation");
+		} else {
+			headers["api-key"] = this.apiKey;
+			headers["X-API-Key"] = this.apiKey;
+			console.log("🔑 Using API key auth");
+		}
 
 		console.log(`🌐 Llamando a Hevy API: ${options.method || "GET"} ${url}`);
 		if (options.body) {
