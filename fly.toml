@@ -1,0 +1,35 @@
+# Fly.io configuration for Hevy MCP Server
+app = 'hevy-mcp-server'
+primary_region = 'mad'  # Madrid - Closest to Spain
+
+[build]
+dockerfile = 'Dockerfile.flyio'
+
+[env]
+NODE_ENV = 'production'
+PORT = '8080'
+
+[http_service]
+internal_port = 8080
+force_https = true
+auto_stop_machines = true
+auto_start_machines = true
+min_machines_running = 0
+
+[http_service.checks]
+grace_period = "10s"
+interval = "30s"
+method = "GET"
+timeout = "5s"
+path = "/health"
+
+[[vm]]
+cpu_kind = 'shared'
+cpus = 1
+memory_mb = 256
+
+[deploy]
+release_command = 'echo "Hevy MCP Server starting..."'
+
+# Secrets (configure with: fly secrets set HEVY_API_KEY=your_key)
+# HEVY_API_KEY will be set as a secret
