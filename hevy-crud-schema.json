@@ -2,7 +2,7 @@
 	"openapi": "3.1.0",
 	"info": {
 		"title": "Hevy Fitness MCP API - Railway Production",
-		"description": "API completa para gestionar entrenamientos, rutinas y datos de fitness. Servidor único en Railway con capacidades CRUD completas y sin limitaciones de timeout. Perfecto para que el GPT pueda crear rutinas de entrenamiento.",
+		"description": "API completa para gestionar entrenamientos, rutinas y datos de fitness. Servidor único en Railway con capacidades CRUD completas y sin limitaciones de timeout. Perfecto para que el GPT pueda crear rutinas de entrenamiento de forma interactiva: 1) Usa getRoutineFolders para mostrar carpetas disponibles, 2) Pregunta al usuario dónde crear la rutina, 3) Usa createRoutine con folderName especificado.",
 		"version": "6.1.0"
 	},
 	"servers": [

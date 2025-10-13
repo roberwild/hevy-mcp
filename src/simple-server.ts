@@ -331,9 +331,16 @@ app.post("/mcp", async (req, res) => {
 					exercises: params.exercises,
 					folderName: params.folderName || params.folder, // Support both parameter names
 				});
+
+				// Add folder information to the result
+				const folderInfo =
+					params.folderName || params.folder
+						? `en la carpeta "${params.folderName || params.folder}"`
+						: "en la carpeta por defecto";
+
 				result = {
 					...routineResult,
-					message: "🎉 ¡Rutina creada exitosamente en Railway!",
+					message: `🎉 ¡Rutina "${params.title || "Nueva Rutina"}" creada exitosamente ${folderInfo}!`,
 					server: "Railway",
 				};
 				break;
@@ -355,11 +362,18 @@ app.post("/mcp", async (req, res) => {
 			case "getRoutineFolders": {
 				const foldersData = await hevyClient.getRoutineFolders({
 					page: params.page || 1,
-					pageSize: params.pageSize || 5,
+					pageSize: params.pageSize || 10, // More folders by default
 				});
 				result = {
 					...foldersData,
-					message: "✅ Carpetas de rutinas obtenidas de Hevy API",
+					message:
+						"✅ Carpetas de rutinas disponibles - El usuario puede elegir dónde crear su rutina",
+					availableFolders:
+						foldersData.routineFolders?.map((folder: any) => ({
+							id: folder.id,
+							name: folder.title,
+							description: `Carpeta "${folder.title}" (ID: ${folder.id})`,
+						})) || [],
 					server: "Railway",
 				};
 				break;
