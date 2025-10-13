@@ -64,9 +64,3 @@ runServer().catch((error) => {
 	console.error("Fatal error in main():", error);
 	process.exit(1);
 });
-
-export async function main() {
-	await server.listen(); // o .start() si usas otro método
-}
-
-export default { main };

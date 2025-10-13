@@ -1,0 +1,185 @@
+{
+	"openapi": "3.1.0",
+	"info": {
+		"title": "Hevy Fitness MCP API - CRUD con Manejo de Timeouts",
+		"description": "API completa para gestionar entrenamientos, rutinas y datos de fitness. Incluye operaciones CRUD con manejo robusto de timeouts de Vercel Free. Funcionará completamente con Vercel Pro o servidor dedicado.",
+		"version": "4.0.0"
+	},
+	"servers": [
+		{
+			"url": "https://hevy-mcp.vercel.app",
+			"description": "Servidor MCP de producción con CRUD completo"
+		}
+	],
+	"paths": {
+		"/health": {
+			"get": {
+				"operationId": "checkHealth",
+				"summary": "Verificar estado del servidor",
+				"responses": {
+					"200": {
+						"description": "Servidor funcionando correctamente"
+					}
+				}
+			}
+		},
+		"/mcp": {
+			"post": {
+				"operationId": "callMCP",
+				"summary": "Endpoint MCP con operaciones CRUD y manejo de timeouts",
+				"description": "Endpoint principal con capacidades completas: consultar, crear, modificar entrenamientos y rutinas. Incluye manejo robusto de timeouts de Vercel Free (10s). Las operaciones de escritura pueden fallar por timeout en Vercel Free, pero funcionarán con Vercel Pro.",
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"jsonrpc": {
+										"type": "string",
+										"enum": ["2.0"],
+										"default": "2.0"
+									},
+									"id": {
+										"type": "integer",
+										"default": 1
+									},
+									"method": {
+										"type": "string",
+										"enum": [
+											"help",
+											"getLastWorkout",
+											"getLastWorkouts",
+											"getWorkouts",
+											"getWorkoutStats",
+											"getMaxWeightWorkout",
+											"searchWorkouts",
+											"getRoutines",
+											"createRoutine",
+											"updateRoutine",
+											"createWorkout",
+											"updateWorkout",
+											"getExerciseTemplates",
+											"getExerciseTemplate",
+											"searchExerciseTemplates",
+											"getExerciseTemplatesByMuscleGroup",
+											"getExerciseTemplatesByEquipment",
+											"getPopularExerciseTemplates"
+										],
+										"description": "Método a ejecutar en el servidor MCP"
+									},
+									"params": {
+										"type": "object",
+										"properties": {
+											"count": {
+												"type": "integer",
+												"description": "Número de elementos a obtener",
+												"default": 3
+											},
+											"query": {
+												"type": "string",
+												"description": "Término de búsqueda"
+											},
+											"page": {
+												"type": "integer",
+												"description": "Página para paginación",
+												"default": 1
+											},
+											"pageSize": {
+												"type": "integer",
+												"description": "Elementos por página",
+												"default": 5
+											},
+											"routineId": {
+												"type": "string",
+												"description": "ID de la rutina para actualizar"
+											},
+											"workoutId": {
+												"type": "string",
+												"description": "ID del entrenamiento para actualizar"
+											},
+											"title": {
+												"type": "string",
+												"description": "Título de la rutina o entrenamiento"
+											},
+											"description": {
+												"type": "string",
+												"description": "Descripción de la rutina o entrenamiento"
+											},
+											"exercises": {
+												"type": "array",
+												"description": "Array de ejercicios con sets, repeticiones y pesos",
+												"items": {
+													"type": "object"
+												}
+											},
+											"startTime": {
+												"type": "string",
+												"format": "date-time",
+												"description": "Hora de inicio del entrenamiento (ISO 8601)"
+											},
+											"endTime": {
+												"type": "string",
+												"format": "date-time",
+												"description": "Hora de fin del entrenamiento (ISO 8601)"
+											},
+											"templateId": {
+												"type": "string",
+												"description": "ID de la plantilla de ejercicio"
+											},
+											"muscleGroup": {
+												"type": "string",
+												"description": "Grupo muscular para filtrar ejercicios (ej: chest, back, legs, shoulders, arms)"
+											},
+											"equipment": {
+												"type": "string",
+												"description": "Tipo de equipamiento para filtrar ejercicios (ej: barbell, dumbbell, bodyweight, machine)"
+											},
+											"muscle_group": {
+												"type": "string",
+												"description": "Filtro por grupo muscular (formato API)"
+											},
+											"limit": {
+												"type": "integer",
+												"description": "Número máximo de ejercicios populares a obtener",
+												"default": 20
+											}
+										},
+										"additionalProperties": true,
+										"default": {}
+									}
+								},
+								"required": ["jsonrpc", "id", "method", "params"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Respuesta exitosa del servidor MCP",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"jsonrpc": {
+											"type": "string",
+											"enum": ["2.0"]
+										},
+										"id": {
+											"type": "integer"
+										},
+										"result": {
+											"type": "object",
+											"description": "Datos de entrenamientos, rutinas, estadísticas o confirmación de operación. En caso de timeout de Vercel Free, incluye información sobre la limitación y sugerencias."
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
