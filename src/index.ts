@@ -3,7 +3,7 @@
 if (process.env.NODE_ENV !== "production") {
 	try {
 		await import("@dotenvx/dotenvx/config");
-	} catch (error) {
+	} catch (_error) {
 		// Ignore if dotenvx is not available
 		console.log("dotenvx not available, using process.env directly");
 	}
