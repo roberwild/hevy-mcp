@@ -136,11 +136,14 @@ const hevyClient = {
 	},
 
 	async createRoutine(routineData: Record<string, unknown>) {
-		// Prepare payload exactly as Hevy API expects (NO routine_folder_id)
+		// Extract only valid fields, filtering out undefined values
+		const { title, exercises } = routineData;
+
+		// Prepare payload exactly as Hevy API expects (NO routine_folder_id at all)
 		const hevyRoutineData = {
 			routine: {
-				title: routineData.title,
-				exercises: routineData.exercises || [
+				title: title || "Nueva Rutina",
+				exercises: exercises || [
 					{
 						exercise_template_id: "79D0BB3A", // Press de Banca por defecto
 						sets: [
@@ -152,6 +155,11 @@ const hevyClient = {
 				],
 			},
 		};
+
+		console.log(
+			"🔍 Debug - Payload para createRoutine:",
+			JSON.stringify(hevyRoutineData, null, 2),
+		);
 
 		const data = await this.makeRequest("/routines", {
 			method: "POST",
