@@ -25,7 +25,7 @@
 		"start": "node dist/index.js",
 		"start:flyio": "node server-flyio.js",
 		"start:vercel": "node api/index.js",
-		"start:railway": "npm run start:http",
+		"start:railway": "node dist/simple-server.js",
 		"start:http": "node dist/index.js --http",
 		"dev": "tsx watch --clear-screen=false src/index.ts",
 		"dev:http": "MCP_TRANSPORT=http tsx watch --clear-screen=false src/index.ts",

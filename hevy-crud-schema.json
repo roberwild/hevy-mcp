@@ -23,7 +23,7 @@
 				}
 			}
 		},
-		"/gpt": {
+		"/mcp": {
 			"post": {
 				"operationId": "callMCP",
 				"summary": "Endpoint único de Railway con CRUD completo",
@@ -47,6 +47,7 @@
 									"method": {
 										"type": "string",
 										"enum": [
+											"initialize",
 											"help",
 											"getLastWorkout",
 											"getLastWorkouts",
@@ -71,6 +72,16 @@
 									"params": {
 										"type": "object",
 										"properties": {
+											"protocolVersion": {
+												"type": "string",
+												"description": "Versión del protocolo MCP (para initialize)",
+												"default": "2024-11-05"
+											},
+											"capabilities": {
+												"type": "object",
+												"description": "Capacidades del cliente (para initialize)",
+												"default": {}
+											},
 											"count": {
 												"type": "integer",
 												"description": "Número de elementos a obtener",
