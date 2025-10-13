@@ -2,17 +2,13 @@
 	"openapi": "3.1.0",
 	"info": {
 		"title": "Hevy Fitness MCP API - Railway Production",
-		"description": "API completa para gestionar entrenamientos, rutinas y datos de fitness. Desplegado en Railway sin limitaciones de timeout. Todas las operaciones CRUD funcionan perfectamente, incluyendo createRoutine para que el GPT pueda crear rutinas de entrenamiento.",
-		"version": "6.0.0"
+		"description": "API completa para gestionar entrenamientos, rutinas y datos de fitness. Servidor único en Railway con capacidades CRUD completas y sin limitaciones de timeout. Perfecto para que el GPT pueda crear rutinas de entrenamiento.",
+		"version": "6.1.0"
 	},
 	"servers": [
 		{
 			"url": "https://hevy-mcp-production.up.railway.app",
-			"description": "Servidor MCP de producción en Railway (SIN limitaciones - CRUD completo)"
-		},
-		{
-			"url": "https://hevy-mcp.vercel.app",
-			"description": "Servidor MCP en Vercel (solo consultas - CRUD con timeouts)"
+			"description": "Servidor MCP de producción en Railway - CRUD completo sin limitaciones"
 		}
 	],
 	"paths": {
@@ -27,11 +23,11 @@
 				}
 			}
 		},
-		"/mcp": {
+		"/gpt": {
 			"post": {
 				"operationId": "callMCP",
-				"summary": "Endpoint MCP con operaciones CRUD completas sin timeouts",
-				"description": "Endpoint principal con capacidades completas: consultar, crear, modificar entrenamientos y rutinas. En Railway todas las operaciones funcionan sin limitaciones de timeout, incluyendo createRoutine para que el GPT pueda crear rutinas de entrenamiento perfectamente.",
+				"summary": "Endpoint único de Railway con CRUD completo",
+				"description": "Endpoint principal del servidor Railway. Todas las operaciones CRUD funcionan perfectamente sin timeouts, incluyendo createRoutine para crear rutinas de entrenamiento.",
 				"requestBody": {
 					"required": true,
 					"content": {

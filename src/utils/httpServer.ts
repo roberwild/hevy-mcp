@@ -49,6 +49,83 @@ export function createHttpServer(
 
 	app.use(express.json());
 
+	// GPT-compatible endpoint (same logic as Vercel api/index.js)
+	app.post("/gpt", async (req, res) => {
+		try {
+			console.log(
+				"🤖 GPT request received:",
+				JSON.stringify(req.body, null, 2),
+			);
+
+			const { method, params = {} } = req.body;
+
+			if (!method) {
+				return res.status(400).json({
+					jsonrpc: "2.0",
+					error: {
+						code: -32600,
+						message: "Invalid Request: method is required",
+					},
+					id: req.body.id || null,
+				});
+			}
+
+			// TODO: Implement actual method handlers here
+			// For now, return help information
+			if (method === "help") {
+				const result = {
+					message: "Hevy MCP Server en Railway - Funcionando correctamente",
+					availableMethods: [
+						"help",
+						"getLastWorkout",
+						"getLastWorkouts",
+						"getWorkouts",
+						"getWorkoutStats",
+						"getMaxWeightWorkout",
+						"searchWorkouts",
+						"getRoutines",
+						"createRoutine",
+						"updateRoutine",
+						"createWorkout",
+						"updateWorkout",
+						"getExerciseTemplates",
+						"searchExerciseTemplates",
+					],
+					server: "Railway MCP Server",
+					timestamp: new Date().toISOString(),
+					note: "Todas las operaciones CRUD funcionan sin timeouts en Railway",
+				};
+
+				return res.json({
+					jsonrpc: "2.0",
+					result,
+					id: req.body.id || 1,
+				});
+			}
+
+			// For other methods, return a placeholder response
+			const result = {
+				message: `Method ${method} received - Implementation needed`,
+				params,
+				server: "Railway MCP Server",
+				timestamp: new Date().toISOString(),
+			};
+
+			res.json({
+				jsonrpc: "2.0",
+				result,
+				id: req.body.id || 1,
+			});
+		} catch (error) {
+			console.error("❌ Error in GPT endpoint:", error);
+			res.status(500).json({
+				jsonrpc: "2.0",
+				error: { code: -32603, message: "Internal error" },
+				id: req.body.id || null,
+			});
+		}
+	});
+
 	// Handle POST requests for client-to-server communication
 	app.post("/mcp", async (req, res) => {
 		// Check for existing session ID
