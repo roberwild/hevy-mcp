@@ -1,18 +1,18 @@
 {
 	"openapi": "3.1.0",
 	"info": {
-		"title": "Hevy Fitness MCP API - Production Ready",
-		"description": "API completa para gestionar entrenamientos, rutinas y datos de fitness. Desplegado en Fly.io sin limitaciones de timeout. Todas las operaciones CRUD funcionan perfectamente.",
-		"version": "5.0.0"
+		"title": "Hevy Fitness MCP API - Railway Production",
+		"description": "API completa para gestionar entrenamientos, rutinas y datos de fitness. Desplegado en Railway sin limitaciones de timeout. Todas las operaciones CRUD funcionan perfectamente, incluyendo createRoutine para que el GPT pueda crear rutinas de entrenamiento.",
+		"version": "6.0.0"
 	},
 	"servers": [
 		{
-			"url": "https://hevy-mcp-server.fly.dev",
-			"description": "Servidor MCP de producción en Fly.io (SIN limitaciones de timeout)"
+			"url": "https://hevy-mcp-production.up.railway.app",
+			"description": "Servidor MCP de producción en Railway (SIN limitaciones - CRUD completo)"
 		},
 		{
 			"url": "https://hevy-mcp.vercel.app",
-			"description": "Servidor MCP en Vercel (con limitaciones de timeout en operaciones CRUD)"
+			"description": "Servidor MCP en Vercel (solo consultas - CRUD con timeouts)"
 		}
 	],
 	"paths": {
@@ -30,8 +30,8 @@
 		"/mcp": {
 			"post": {
 				"operationId": "callMCP",
-				"summary": "Endpoint MCP con operaciones CRUD completas",
-				"description": "Endpoint principal con capacidades completas: consultar, crear, modificar entrenamientos y rutinas. En Fly.io todas las operaciones funcionan sin limitaciones de timeout. En Vercel pueden fallar por timeout de 10s.",
+				"summary": "Endpoint MCP con operaciones CRUD completas sin timeouts",
+				"description": "Endpoint principal con capacidades completas: consultar, crear, modificar entrenamientos y rutinas. En Railway todas las operaciones funcionan sin limitaciones de timeout, incluyendo createRoutine para que el GPT pueda crear rutinas de entrenamiento perfectamente.",
 				"requestBody": {
 					"required": true,
 					"content": {

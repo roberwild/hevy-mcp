@@ -1,0 +1,16 @@
+# Railway.app configuration for Hevy MCP Server
+
+# Build configuration
+[build]
+builder = "NIXPACKS"
+
+# Environment variables will be set in Railway dashboard
+[env]
+NODE_ENV = "production"
+PORT = "$PORT"
+
+# Health check configuration
+[healthcheck]
+path = "/health"
+timeout = 30
+interval = 30
