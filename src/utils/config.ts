@@ -41,8 +41,8 @@ export function parseConfig(
 
 	const transportMode: "http" | "stdio" =
 		argv.includes("--http") || env.MCP_TRANSPORT === "http" ? "http" : "stdio";
-	const httpPort = Number.parseInt(env.MCP_HTTP_PORT || "3000", 10);
-	const httpHost = env.MCP_HTTP_HOST || "127.0.0.1";
+	const httpPort = Number.parseInt(env.PORT || env.MCP_HTTP_PORT || "3000", 10);
+	const httpHost = env.HOST || env.MCP_HTTP_HOST || "0.0.0.0";
 	const enableDnsRebindingProtection =
 		env.MCP_DNS_REBINDING_PROTECTION === "true";
 	const allowedHosts = env.MCP_ALLOWED_HOSTS?.split(",")

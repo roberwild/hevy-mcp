@@ -1,5 +1,14 @@
 #!/usr/bin/env node
-import "@dotenvx/dotenvx/config";
+// Only load dotenvx in development, not in production
+if (process.env.NODE_ENV !== "production") {
+	try {
+		await import("@dotenvx/dotenvx/config");
+	} catch (error) {
+		// Ignore if dotenvx is not available
+		console.log("dotenvx not available, using process.env directly");
+	}
+}
+
 // Import tool registration functions
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
@@ -19,6 +28,19 @@ const HEVY_API_BASEURL = "https://api.hevyapp.com";
 // Parse config (CLI args + env)
 const args = process.argv.slice(2);
 const cfg = parseConfig(args, process.env);
+
+// Debug: log environment variables (only in production for Railway debugging)
+if (process.env.NODE_ENV === "production") {
+	console.log("Environment check:");
+	console.log("- NODE_ENV:", process.env.NODE_ENV);
+	console.log(
+		"- HEVY_API_KEY:",
+		process.env.HEVY_API_KEY ? "***SET***" : "NOT SET",
+	);
+	console.log("- MCP_TRANSPORT:", process.env.MCP_TRANSPORT);
+	console.log("- PORT:", process.env.PORT);
+	console.log("- Parsed config apiKey:", cfg.apiKey ? "***SET***" : "NOT SET");
+}
 
 // Create server instance
 const server = new McpServer({
