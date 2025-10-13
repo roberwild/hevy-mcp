@@ -136,19 +136,53 @@ const hevyClient = {
 	},
 
 	async createRoutine(routineData: Record<string, unknown>) {
-		// 💥 FORCE DELETE routine_folder_id from input params first
-		delete (routineData as any).routine_folder_id;
+		// First, get existing routines to find a valid routine_folder_id
+		console.log(
+			"🔍 Obteniendo routine_folder_id válido desde rutinas existentes...",
+		);
 
-		// Extract only valid fields, filtering out undefined values
+		let validFolderId = null;
+
+		try {
+			const existingRoutines = await this.makeRequest(
+				"/routines?page=1&pageSize=1",
+			);
+
+			if (existingRoutines.routines && existingRoutines.routines.length > 0) {
+				validFolderId = existingRoutines.routines[0].routine_folder_id;
+				console.log("✅ routine_folder_id válido encontrado:", validFolderId);
+			}
+
+			// If no valid folder ID found, try to get it from routine folders endpoint
+			if (!validFolderId) {
+				console.log(
+					"🔍 Intentando obtener folder ID desde /routine_folders...",
+				);
+				try {
+					const folders = await this.makeRequest("/routine_folders");
+					if (folders.routine_folders && folders.routine_folders.length > 0) {
+						validFolderId = folders.routine_folders[0].id;
+						console.log("✅ routine_folder_id desde folders:", validFolderId);
+					}
+				} catch (folderError) {
+					console.log("⚠️ No se pudo obtener folders, usando null");
+				}
+			}
+		} catch (routineError) {
+			console.log("⚠️ Error obteniendo rutinas existentes:", routineError);
+		}
+
+		// Extract only valid fields
 		const { title, exercises } = routineData;
 
 		// Helper function to remove undefined/null values recursively
 		const removeUndefined = (obj: any) => JSON.parse(JSON.stringify(obj));
 
-		// Prepare payload exactly as Hevy API expects (NO routine_folder_id at all)
+		// Prepare payload with valid routine_folder_id
 		const hevyRoutineData = removeUndefined({
 			routine: {
 				title: title || "Nueva Rutina",
+				routine_folder_id: validFolderId, // Use the valid folder ID we found
 				exercises: exercises || [
 					{
 						exercise_template_id: "79D0BB3A", // Press de Banca por defecto
@@ -163,7 +197,7 @@ const hevyClient = {
 		});
 
 		console.log(
-			"🔍 Debug - Payload LIMPIO para createRoutine:",
+			"🔍 Debug - Payload FINAL con routine_folder_id válido:",
 			JSON.stringify(hevyRoutineData, null, 2),
 		);
 
