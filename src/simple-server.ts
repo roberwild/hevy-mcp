@@ -250,6 +250,63 @@ const hevyClient = {
 			message: "Rutina creada exitosamente en Railway sin timeouts",
 		};
 	},
+
+	async updateRoutine(routineId: string, routineData: Record<string, unknown>) {
+		const { title, exercises, notes } = routineData;
+
+		// Helper function to remove undefined/null values recursively
+		const removeUndefined = (obj: any) => JSON.parse(JSON.stringify(obj));
+
+		// Prepare payload for updating routine
+		const payload = {
+			routine: {
+				title,
+				notes: notes || null,
+				exercises: Array.isArray(exercises)
+					? exercises.map((exercise: any) => ({
+							exercise_template_id:
+								exercise.exerciseTemplateId || exercise.exercise_template_id,
+							superset_id: exercise.supersetId || exercise.superset_id || null,
+							rest_seconds:
+								exercise.restSeconds || exercise.rest_seconds || null,
+							notes: exercise.notes || null,
+							sets: Array.isArray(exercise.sets)
+								? exercise.sets.map((set: any) => ({
+										type: set.type || "normal",
+										weight_kg: set.weightKg || set.weight_kg || null,
+										reps: set.reps || null,
+										distance_meters:
+											set.distanceMeters || set.distance_meters || null,
+										duration_seconds:
+											set.durationSeconds || set.duration_seconds || null,
+										custom_metric:
+											set.customMetric || set.custom_metric || null,
+									}))
+								: [],
+						}))
+					: [],
+			},
+		};
+
+		console.log(
+			"🔄 Actualizando rutina:",
+			routineId,
+			"Payload:",
+			JSON.stringify(payload, null, 2),
+		);
+
+		const result = await this.makeRequest(`/routines/${routineId}`, {
+			method: "PUT",
+			body: payload,
+		});
+		console.log("✅ Rutina actualizada:", result);
+		return removeUndefined(result);
+	},
+
+	async getRoutineById(routineId: string) {
+		const result = await this.makeRequest(`/routines/${routineId}`);
+		return result;
+	},
 };
 
 // Health check endpoint
@@ -291,6 +348,9 @@ app.post("/mcp", async (req, res) => {
 						"getRoutines",
 						"getRoutineFolders",
 						"createRoutine",
+						"updateRoutine",
+						"getRoutineDetails",
+						"addExerciseToRoutine",
 						"getExerciseTemplates",
 						"searchExerciseTemplates",
 					],
@@ -341,6 +401,75 @@ app.post("/mcp", async (req, res) => {
 				result = {
 					...routineResult,
 					message: `🎉 ¡Rutina "${params.title || "Nueva Rutina"}" creada exitosamente ${folderInfo}!`,
+					server: "Railway",
+				};
+				break;
+			}
+
+			case "updateRoutine": {
+				const routineResult = await hevyClient.updateRoutine(params.routineId, {
+					title: params.title,
+					exercises: params.exercises,
+					notes: params.notes,
+				});
+
+				result = {
+					...routineResult,
+					message: "🔄 ¡Rutina actualizada exitosamente!",
+					server: "Railway",
+				};
+				break;
+			}
+
+			case "getRoutineDetails": {
+				const routineData = await hevyClient.getRoutineById(params.routineId);
+				result = {
+					...routineData,
+					message: "✅ Detalles de rutina obtenidos de Hevy API",
+					server: "Railway",
+				};
+				break;
+			}
+
+			case "addExerciseToRoutine": {
+				// First get current routine
+				const currentRoutine = await hevyClient.getRoutineById(
+					params.routineId,
+				);
+				if (!currentRoutine?.routine) {
+					result = {
+						error: `Rutina con ID ${params.routineId} no encontrada`,
+						server: "Railway",
+					};
+					break;
+				}
+
+				// Prepare new exercise
+				const newExercise = {
+					exerciseTemplateId: params.exerciseTemplateId,
+					supersetId: params.supersetId || null,
+					restSeconds: params.restSeconds || null,
+					notes: params.notes || null,
+					sets: params.sets || [],
+				};
+
+				// Add to existing exercises
+				const existingExercises = currentRoutine.routine.exercises || [];
+				const allExercises = [...existingExercises, newExercise];
+
+				// Update routine with new exercise
+				const updatedRoutine = await hevyClient.updateRoutine(
+					params.routineId,
+					{
+						title: currentRoutine.routine.title,
+						notes: currentRoutine.routine.notes,
+						exercises: allExercises,
+					},
+				);
+
+				result = {
+					...updatedRoutine,
+					message: "✅ Ejercicio añadido exitosamente a la rutina",
 					server: "Railway",
 				};
 				break;
