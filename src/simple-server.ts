@@ -135,6 +135,11 @@ const hevyClient = {
 		};
 	},
 
+	async getExerciseTemplate(templateId: string) {
+		const data = await this.makeRequest(`/exercise_templates/${templateId}`);
+		return data;
+	},
+
 	async getRoutineFolders({ page = 1, pageSize = 5 }) {
 		const data = await this.makeRequest(
 			`/routine_folders?page=${page}&pageSize=${pageSize}`,
@@ -396,6 +401,7 @@ app.post("/mcp", async (req, res) => {
 						"getRoutineDetails",
 						"addExerciseToRoutine",
 						"getExerciseTemplates",
+						"getExerciseTemplate",
 						"searchExerciseTemplates",
 					],
 					capabilities:
@@ -602,6 +608,25 @@ app.post("/mcp", async (req, res) => {
 					result = {
 						...searchResults,
 						message: `✅ Búsqueda de ejercicios completada para "${searchQuery}"`,
+						server: "Railway",
+					};
+				}
+				break;
+			}
+
+			case "getExerciseTemplate": {
+				const exerciseData = await hevyClient.getExerciseTemplate(
+					params.exerciseTemplateId || params.templateId,
+				);
+				if (!exerciseData) {
+					result = {
+						error: `Exercise template con ID ${params.exerciseTemplateId || params.templateId} no encontrado`,
+						server: "Railway",
+					};
+				} else {
+					result = {
+						...exerciseData,
+						message: "✅ Detalles de ejercicio obtenidos de Hevy API",
 						server: "Railway",
 					};
 				}
