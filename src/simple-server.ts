@@ -257,40 +257,56 @@ const hevyClient = {
 		// Helper function to remove undefined/null values recursively
 		const removeUndefined = (obj: any) => JSON.parse(JSON.stringify(obj));
 
-		// Prepare payload for updating routine
-		const payload = {
+		// Ensure we have at least one exercise (API requirement)
+		let processedExercises = [];
+
+		if (Array.isArray(exercises) && exercises.length > 0) {
+			processedExercises = exercises.map((exercise: any) => ({
+				exercise_template_id:
+					exercise.exerciseTemplateId || exercise.exercise_template_id,
+				superset_id: exercise.supersetId || exercise.superset_id || null,
+				rest_seconds: exercise.restSeconds || exercise.rest_seconds || null,
+				notes: exercise.notes || null,
+				sets:
+					Array.isArray(exercise.sets) && exercise.sets.length > 0
+						? exercise.sets.map((set: any) => ({
+								type: set.type || "normal",
+								weight_kg: set.weightKg || set.weight_kg || null,
+								reps: set.reps || null,
+								distance_meters:
+									set.distanceMeters || set.distance_meters || null,
+								duration_seconds:
+									set.durationSeconds || set.duration_seconds || null,
+								custom_metric: set.customMetric || set.custom_metric || null,
+							}))
+						: [{ type: "normal", reps: 10, weight_kg: null }], // Default set if empty
+			}));
+		} else {
+			// Default exercise if no exercises provided (API requires at least 1)
+			processedExercises = [
+				{
+					exercise_template_id: "79D0BB3A", // Bench Press default
+					sets: [{ type: "normal", reps: 10, weight_kg: 40 }],
+					notes: "Ejercicio por defecto - actualizar según necesidad",
+					superset_id: null,
+					rest_seconds: 90,
+				},
+			];
+		}
+
+		const payload = removeUndefined({
 			routine: {
-				title,
+				title: title || "Rutina Sin Título",
 				notes: notes || null,
-				exercises: Array.isArray(exercises)
-					? exercises.map((exercise: any) => ({
-							exercise_template_id:
-								exercise.exerciseTemplateId || exercise.exercise_template_id,
-							superset_id: exercise.supersetId || exercise.superset_id || null,
-							rest_seconds:
-								exercise.restSeconds || exercise.rest_seconds || null,
-							notes: exercise.notes || null,
-							sets: Array.isArray(exercise.sets)
-								? exercise.sets.map((set: any) => ({
-										type: set.type || "normal",
-										weight_kg: set.weightKg || set.weight_kg || null,
-										reps: set.reps || null,
-										distance_meters:
-											set.distanceMeters || set.distance_meters || null,
-										duration_seconds:
-											set.durationSeconds || set.duration_seconds || null,
-										custom_metric:
-											set.customMetric || set.custom_metric || null,
-									}))
-								: [],
-						}))
-					: [],
+				exercises: processedExercises,
 			},
-		};
+		});
 
 		console.log(
 			"🔄 Actualizando rutina:",
 			routineId,
+			"Ejercicios a enviar:",
+			processedExercises.length,
 			"Payload:",
 			JSON.stringify(payload, null, 2),
 		);
