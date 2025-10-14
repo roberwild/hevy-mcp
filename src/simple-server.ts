@@ -480,7 +480,7 @@ app.post("/mcp", async (req, res) => {
 				const currentRoutine = await hevyClient.getRoutineById(
 					params.routineId,
 				);
-				if (!currentRoutine) {
+				if (!currentRoutine?.routine) {
 					result = {
 						error: `Rutina con ID ${params.routineId} no encontrada`,
 						server: "Railway",
@@ -488,13 +488,8 @@ app.post("/mcp", async (req, res) => {
 					break;
 				}
 
-				console.log(
-					"🔍 addExerciseToRoutine - currentRoutine structure:",
-					JSON.stringify(currentRoutine, null, 2),
-				);
-
 				// Convert existing exercises to the format expected by updateRoutine (camelCase)
-				const existingExercises = (currentRoutine.exercises || []).map(
+				const existingExercises = (currentRoutine.routine.exercises || []).map(
 					(exercise: any) => ({
 						exerciseTemplateId: exercise.exercise_template_id,
 						supersetId: exercise.superset_id,
@@ -534,8 +529,8 @@ app.post("/mcp", async (req, res) => {
 				const updatedRoutine = await hevyClient.updateRoutine(
 					params.routineId,
 					{
-						title: currentRoutine.title,
-						notes: currentRoutine.notes,
+						title: currentRoutine.routine.title,
+						notes: currentRoutine.routine.notes,
 						exercises: allExercises,
 					},
 				);
