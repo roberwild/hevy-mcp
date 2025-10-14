@@ -530,6 +530,14 @@ app.post("/mcp", async (req, res) => {
 					"🔄 addExerciseToRoutine - Ejercicios finales:",
 					JSON.stringify(allExercises, null, 2),
 				);
+				console.log(
+					"🔍 DEBUG - Nuevo ejercicio:",
+					JSON.stringify(newExercise, null, 2),
+				);
+				console.log(
+					"🔍 DEBUG - exerciseTemplateId recibido:",
+					params.exerciseTemplateId,
+				);
 
 				// Update routine with new exercise
 				const updatedRoutine = await hevyClient.updateRoutine(
