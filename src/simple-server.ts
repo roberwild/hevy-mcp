@@ -217,20 +217,48 @@ const hevyClient = {
 		const removeUndefined = (obj: any) => JSON.parse(JSON.stringify(obj));
 
 		// Prepare payload with valid folder_id (NOT routine_folder_id!)
+		// Process exercises to match API format
+		let processedExercises = [];
+		if (Array.isArray(exercises) && exercises.length > 0) {
+			processedExercises = exercises.map((exercise: any) => ({
+				exercise_template_id:
+					exercise.exerciseTemplateId || exercise.exercise_template_id,
+				superset_id: exercise.supersetId || exercise.superset_id || null,
+				rest_seconds: exercise.restSeconds || exercise.rest_seconds || null,
+				notes: exercise.notes || null,
+				sets:
+					Array.isArray(exercise.sets) && exercise.sets.length > 0
+						? exercise.sets.map((set: any) => ({
+								type: set.type || "normal",
+								weight_kg: set.weightKg || set.weight_kg || null,
+								reps: set.reps || null,
+								distance_meters:
+									set.distanceMeters || set.distance_meters || null,
+								duration_seconds:
+									set.durationSeconds || set.duration_seconds || null,
+								custom_metric: set.customMetric || set.custom_metric || null,
+							}))
+						: [{ type: "normal", reps: 10, weight_kg: null }],
+			}));
+		} else {
+			// Default exercise if none provided
+			processedExercises = [
+				{
+					exercise_template_id: "79D0BB3A", // Press de Banca por defecto
+					sets: [
+						{ type: "normal", reps: 10, weight_kg: 40 },
+						{ type: "normal", reps: 10, weight_kg: 40 },
+						{ type: "normal", reps: 10, weight_kg: 40 },
+					],
+				},
+			];
+		}
+
 		const hevyRoutineData = removeUndefined({
 			routine: {
 				title: title || "Nueva Rutina",
 				folder_id: validFolderId, // Hevy uses "folder_id", not "routine_folder_id"
-				exercises: exercises || [
-					{
-						exercise_template_id: "79D0BB3A", // Press de Banca por defecto
-						sets: [
-							{ type: "normal", reps: 10, weight_kg: 40 },
-							{ type: "normal", reps: 10, weight_kg: 40 },
-							{ type: "normal", reps: 10, weight_kg: 40 },
-						],
-					},
-				],
+				exercises: processedExercises,
 			},
 		});
 
