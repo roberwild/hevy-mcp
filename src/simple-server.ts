@@ -488,7 +488,27 @@ app.post("/mcp", async (req, res) => {
 					break;
 				}
 
-				// Prepare new exercise
+				// Convert existing exercises to the format expected by updateRoutine (camelCase)
+				const existingExercises = (currentRoutine.routine.exercises || []).map(
+					(exercise: any) => ({
+						exerciseTemplateId: exercise.exercise_template_id,
+						supersetId: exercise.superset_id,
+						restSeconds: exercise.rest_seconds,
+						notes: exercise.notes,
+						sets: Array.isArray(exercise.sets)
+							? exercise.sets.map((set: any) => ({
+									type: set.type,
+									weightKg: set.weight_kg,
+									reps: set.reps,
+									distanceMeters: set.distance_meters,
+									durationSeconds: set.duration_seconds,
+									customMetric: set.custom_metric,
+								}))
+							: [],
+					}),
+				);
+
+				// Prepare new exercise in camelCase format
 				const newExercise = {
 					exerciseTemplateId: params.exerciseTemplateId,
 					supersetId: params.supersetId || null,
@@ -497,9 +517,13 @@ app.post("/mcp", async (req, res) => {
 					sets: params.sets || [],
 				};
 
-				// Add to existing exercises
-				const existingExercises = currentRoutine.routine.exercises || [];
+				// Combine all exercises in consistent camelCase format
 				const allExercises = [...existingExercises, newExercise];
+
+				console.log(
+					"🔄 addExerciseToRoutine - Ejercicios finales:",
+					JSON.stringify(allExercises, null, 2),
+				);
 
 				// Update routine with new exercise
 				const updatedRoutine = await hevyClient.updateRoutine(
