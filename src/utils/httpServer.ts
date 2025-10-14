@@ -86,6 +86,8 @@ export function createHttpServer(
 						"getRoutines",
 						"createRoutine",
 						"updateRoutine",
+						"getRoutineDetails",
+						"addExerciseToRoutine",
 						"createWorkout",
 						"updateWorkout",
 						"getExerciseTemplates",
@@ -135,7 +137,10 @@ export function createHttpServer(
 		if (sessionId && transports.has(sessionId)) {
 			// Reuse existing transport
 			transport = transports.get(sessionId)?.transport;
-			transports.get(sessionId)!.lastActivity = Date.now();
+			const existingSession = transports.get(sessionId);
+			if (existingSession) {
+				existingSession.lastActivity = Date.now();
+			}
 		} else if (!sessionId && isInitializeRequest(req.body)) {
 			// New initialization request
 			transport = new StreamableHTTPServerTransport({
@@ -153,7 +158,7 @@ export function createHttpServer(
 			// Clean up transport when closed
 			transport.onclose = () => {
 				if (transport.sessionId) {
-					transports.delete(transport.sessionId!);
+					transports.delete(transport.sessionId);
 				}
 			};
 

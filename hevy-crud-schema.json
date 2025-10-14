@@ -59,6 +59,8 @@
 											"getRoutineFolders",
 											"createRoutine",
 											"updateRoutine",
+											"getRoutineDetails",
+											"addExerciseToRoutine",
 											"createWorkout",
 											"updateWorkout",
 											"getExerciseTemplates",
