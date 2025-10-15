@@ -1,3 +1,15 @@
+## [Unreleased]
+
+### Bug Fixes
+
+* **schema:** Fixed hevy-crud-schema.json documentation for addExerciseToRoutine method
+  - Corrected parameter name from `templateId` to `exerciseTemplateId`
+  - Added missing required `sets` parameter documentation
+  - Added optional parameters: `supersetId`, `restSeconds`, `notes`
+  - Updated API description with usage examples
+  - Version bumped to 6.2.0 in schema
+  - This was NOT a Hevy API bug, but a documentation issue causing incorrect parameters to be sent
+
 ## [1.10.6](https://github.com/chrisdoc/hevy-mcp/compare/v1.10.5...v1.10.6) (2025-10-06)
 
 ## [1.10.5](https://github.com/chrisdoc/hevy-mcp/compare/v1.10.4...v1.10.5) (2025-09-29)

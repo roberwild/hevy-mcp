@@ -2,8 +2,8 @@
 	"openapi": "3.1.0",
 	"info": {
 		"title": "Hevy Fitness MCP API - Railway Production",
-		"description": "API completa para gestionar entrenamientos, rutinas y datos de fitness. Servidor único en Railway con capacidades CRUD completas y sin limitaciones de timeout. Perfecto para que el GPT pueda crear rutinas de entrenamiento de forma interactiva: 1) Usa getRoutineFolders para mostrar carpetas disponibles, 2) Pregunta al usuario dónde crear la rutina, 3) Usa createRoutine con folderName especificado.",
-		"version": "6.1.0"
+		"description": "API completa para gestionar entrenamientos, rutinas y datos de fitness. Servidor único en Railway con capacidades CRUD completas y sin limitaciones de timeout. IMPORTANTE para addExerciseToRoutine: Debes enviar 'exerciseTemplateId' (no 'templateId') y un array de 'sets' con al menos un set que incluya 'type' (warmup/normal/failure/dropset) y opcionalmente weightKg, reps, durationSeconds o distanceMeters según el tipo de ejercicio.",
+		"version": "6.2.0"
 	},
 	"servers": [
 		{
@@ -27,7 +27,7 @@
 			"post": {
 				"operationId": "callMCP",
 				"summary": "Endpoint único de Railway con CRUD completo",
-				"description": "Endpoint principal del servidor Railway. Todas las operaciones CRUD funcionan perfectamente sin timeouts, incluyendo createRoutine para crear rutinas de entrenamiento.",
+				"description": "Endpoint principal del servidor Railway. Todas las operaciones CRUD funcionan perfectamente sin timeouts. EJEMPLO para addExerciseToRoutine: {method: 'addExerciseToRoutine', params: {routineId: 'xxx', exerciseTemplateId: '43573BB8', sets: [{type: 'normal', reps: 10, weightKg: 40}]}}",
 				"requestBody": {
 					"required": true,
 					"content": {
@@ -143,7 +143,62 @@
 											},
 											"templateId": {
 												"type": "string",
-												"description": "ID de la plantilla de ejercicio"
+												"description": "ID de la plantilla de ejercicio (para getExerciseTemplate)"
+											},
+											"exerciseTemplateId": {
+												"type": "string",
+												"description": "ID de la plantilla de ejercicio (requerido para addExerciseToRoutine)"
+											},
+											"sets": {
+												"type": "array",
+												"description": "Array de sets para el ejercicio (requerido para addExerciseToRoutine). Cada set debe tener type, y opcionalmente weightKg, reps, durationSeconds, distanceMeters",
+												"items": {
+													"type": "object",
+													"properties": {
+														"type": {
+															"type": "string",
+															"enum": [
+																"warmup",
+																"normal",
+																"failure",
+																"dropset"
+															],
+															"default": "normal"
+														},
+														"weightKg": {
+															"type": "number",
+															"description": "Peso en kilogramos"
+														},
+														"reps": {
+															"type": "integer",
+															"description": "Número de repeticiones"
+														},
+														"durationSeconds": {
+															"type": "integer",
+															"description": "Duración en segundos (para ejercicios de tiempo)"
+														},
+														"distanceMeters": {
+															"type": "integer",
+															"description": "Distancia en metros (para ejercicios de cardio)"
+														},
+														"customMetric": {
+															"type": "number",
+															"description": "Métrica personalizada"
+														}
+													}
+												}
+											},
+											"supersetId": {
+												"type": "integer",
+												"description": "ID del superset (opcional, para agrupar ejercicios)"
+											},
+											"restSeconds": {
+												"type": "integer",
+												"description": "Tiempo de descanso en segundos entre sets"
+											},
+											"notes": {
+												"type": "string",
+												"description": "Notas sobre el ejercicio"
 											},
 											"muscleGroup": {
 												"type": "string",
