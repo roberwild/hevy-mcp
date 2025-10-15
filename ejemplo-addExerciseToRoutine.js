@@ -207,7 +207,7 @@ async function ejemplo4_crearRutinaCompleta() {
 async function error1_nombreIncorrecto() {
 	console.log("\n=== ❌ ERROR 1: Nombre de parámetro incorrecto ===");
 
-	const payload = {
+	const _payload = {
 		jsonrpc: "2.0",
 		id: 1,
 		method: "addExerciseToRoutine",
@@ -226,7 +226,7 @@ async function error1_nombreIncorrecto() {
 async function error2_sinSets() {
 	console.log("\n=== ❌ ERROR 2: No incluir sets ===");
 
-	const payload = {
+	const _payload = {
 		jsonrpc: "2.0",
 		id: 1,
 		method: "addExerciseToRoutine",
@@ -245,7 +245,7 @@ async function error2_sinSets() {
 async function error3_setSinType() {
 	console.log("\n=== ❌ ERROR 3: Set sin type ===");
 
-	const payload = {
+	const _payload = {
 		jsonrpc: "2.0",
 		id: 1,
 		method: "addExerciseToRoutine",

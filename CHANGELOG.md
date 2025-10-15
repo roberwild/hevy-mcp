@@ -1,5 +1,18 @@
 ## [Unreleased]
 
+### Features
+
+* **search:** Implemented local exercise template search with Spanish support
+  - Added `searchExerciseTemplates` method for instant local searches (no API calls)
+  - Bilingual support: search in English or Spanish
+  - Fuzzy matching for typo tolerance
+  - Spanish to English translations for common exercise names
+  - Added `getExerciseTemplatesInfo` to check catalog status
+  - Created script `update-exercise-templates.js` to refresh catalog from Hevy API
+  - Added npm script `update-templates` for easy catalog updates
+  - Comprehensive documentation in README-TEMPLATES.md
+  - Version bumped to 6.3.0 in schema
+
 ### Bug Fixes
 
 * **schema:** Fixed hevy-crud-schema.json documentation for addExerciseToRoutine method

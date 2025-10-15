@@ -20,6 +20,7 @@
 		"inspect": "npm run build && npx -y @modelcontextprotocol/inspector@latest node dist/index.js",
 		"test": "vitest --run",
 		"export-specs": "node ./scripts/export-openapi-spec.js",
+		"update-templates": "node ./scripts/update-exercise-templates.js",
 		"build": "tsup",
 		"build:client": "kubb generate",
 		"start": "node dist/index.js",

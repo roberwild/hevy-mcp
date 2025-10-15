@@ -2,8 +2,8 @@
 	"openapi": "3.1.0",
 	"info": {
 		"title": "Hevy Fitness MCP API - Railway Production",
-		"description": "API completa para gestionar entrenamientos, rutinas y datos de fitness. Servidor único en Railway con capacidades CRUD completas y sin limitaciones de timeout. IMPORTANTE para addExerciseToRoutine: Debes enviar 'exerciseTemplateId' (no 'templateId') y un array de 'sets' con al menos un set que incluya 'type' (warmup/normal/failure/dropset) y opcionalmente weightKg, reps, durationSeconds o distanceMeters según el tipo de ejercicio.",
-		"version": "6.2.0"
+		"description": "API completa para gestionar entrenamientos, rutinas y datos de fitness. Servidor único en Railway con capacidades CRUD completas y sin limitaciones de timeout. IMPORTANTE para addExerciseToRoutine: Debes enviar 'exerciseTemplateId' (no 'templateId') y un array de 'sets' con al menos un set que incluya 'type' (warmup/normal/failure/dropset) y opcionalmente weightKg, reps, durationSeconds o distanceMeters según el tipo de ejercicio. BÚSQUEDA DE EJERCICIOS: Usa searchExerciseTemplates para encontrar ejercicios por nombre en español o inglés (búsqueda LOCAL, sin API calls, instantánea). Ejemplos: 'press banca', 'sentadilla', 'remo', 'leg press'.",
+		"version": "6.3.0"
 	},
 	"servers": [
 		{
@@ -66,6 +66,7 @@
 											"getExerciseTemplates",
 											"getExerciseTemplate",
 											"searchExerciseTemplates",
+											"getExerciseTemplatesInfo",
 											"getExerciseTemplatesByMuscleGroup",
 											"getExerciseTemplatesByEquipment",
 											"getPopularExerciseTemplates"
@@ -92,7 +93,7 @@
 											},
 											"query": {
 												"type": "string",
-												"description": "Término de búsqueda"
+												"description": "Término de búsqueda. Para searchExerciseTemplates: buscar ejercicios por nombre en español o inglés (ej: 'press banca', 'sentadilla', 'leg press', 'bicep curl')"
 											},
 											"page": {
 												"type": "integer",
