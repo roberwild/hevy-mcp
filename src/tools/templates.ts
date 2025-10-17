@@ -431,3 +431,69 @@ export async function registerTemplateResources(server: McpServer) {
 		throw new Error(`Unknown resource URI: ${uri}`);
 	});
 }
+
+/**
+ * Búsqueda local de ejercicios con fuzzy matching y traducciones españolas
+ * Esta función NO hace llamadas a API, es instantánea
+ */
+export function searchExerciseTemplatesLocal(query: string, limit = 10) {
+	const data = loadTemplatesData();
+	const translations = loadCsvTranslations();
+
+	if (!data || data.exercise_templates.length === 0) {
+		return {
+			exerciseTemplates: [],
+			message:
+				"Exercise templates database not available. Run 'npm run update-templates' to fetch the latest exercises.",
+		};
+	}
+
+	// Traducir si es español
+	let searchTerm = query.toLowerCase();
+	const originalTerm = searchTerm;
+
+	// Aplicar traducciones del diccionario (fallback)
+	for (const [es, en] of Object.entries(EXERCISE_NAMES_ES_EN)) {
+		if (searchTerm.includes(es)) {
+			searchTerm = searchTerm.replace(es, en);
+		}
+	}
+
+	// Buscar en el JSON local - también buscamos en español usando el CSV
+	const results = data.exercise_templates
+		.map((template) => {
+			const csvData = translations?.get(template.id);
+			// Calcular score buscando en inglés Y español
+			const englishScore = fuzzyMatch(searchTerm, template.title);
+			const spanishScore = csvData
+				? fuzzyMatch(originalTerm, csvData.title_spanish)
+				: 0;
+			// Usar el score más alto
+			const finalScore = Math.max(englishScore, spanishScore);
+
+			return {
+				...template,
+				score: finalScore,
+				spanishTitle: csvData?.title_spanish,
+			};
+		})
+		.filter((template) => template.score > 30) // Umbral de relevancia
+		.sort((a, b) => b.score - a.score)
+		.slice(0, limit)
+		.map(({ score, spanishTitle, ...template }) => ({
+			id: template.id,
+			title: template.title,
+			spanishTitle: spanishTitle,
+			type: template.type,
+			primaryMuscleGroup: template.primary_muscle_group,
+			equipment: template.equipment,
+			isCustom: template.is_custom,
+			relevance: `${Math.round(score)}%`,
+		}));
+
+	return {
+		exerciseTemplates: results,
+		message: `✅ Búsqueda de ejercicios completada para "${query}" - ${results.length} resultados encontrados`,
+		server: "Local",
+	};
+}

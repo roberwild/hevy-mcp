@@ -4,6 +4,7 @@
 // This bypasses all MCP complexity and works directly with GPT requests
 
 import express from "express";
+import { searchExerciseTemplatesLocal } from "./tools/templates.js";
 import {
 	createIdConfusionError,
 	createInvalidExerciseIdError,
@@ -709,19 +710,22 @@ app.post("/mcp", async (req, res) => {
 
 			case "searchExerciseTemplates": {
 				const searchQuery = params.query || params.search || "";
+				const searchLimit = params.limit || 10;
 				if (!searchQuery) {
 					result = {
 						error: "Se requiere un término de búsqueda",
 						server: "Railway",
 					};
 				} else {
-					const searchResults =
-						await hevyClient.searchExerciseTemplates(searchQuery);
-					result = {
-						...searchResults,
-						message: `✅ Búsqueda de ejercicios completada para "${searchQuery}"`,
-						server: "Railway",
-					};
+					console.log(
+						`🔍 Local search: "${searchQuery}" (limit: ${searchLimit})`,
+					);
+					// ✅ Usar búsqueda LOCAL con fuzzy matching y español
+					const searchResults = searchExerciseTemplatesLocal(
+						searchQuery,
+						searchLimit,
+					);
+					result = searchResults;
 				}
 				break;
 			}
