@@ -13,6 +13,7 @@
   - ✅ Added example script `ejemplo-busqueda-mejorada.js` to demonstrate functionality
   - 📚 Updated README-TEMPLATES.md with MCP Resource documentation
   - 📚 Created BUSQUEDA_EJERCICIOS_MEJORADA.md with implementation details
+  - 📋 Updated hevy-crud-schema.json to v6.4.0 with bilingual search documentation
   
 * **search:** Implemented local exercise template search with Spanish support
   - Added `searchExerciseTemplates` method for instant local searches (no API calls)
