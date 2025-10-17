@@ -25,6 +25,10 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/api ./api
 COPY --from=builder /app/src/generated ./src/generated
 
+# Copy data files needed for local search
+COPY --from=builder /app/templates-hevy-exercises.json ./templates-hevy-exercises.json
+COPY --from=builder /app/templates_hevy_exercises.csv ./templates_hevy_exercises.csv
+
 # Create non-root user for security
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S nodejs -u 1001
