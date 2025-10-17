@@ -312,7 +312,7 @@ export function registerTemplateTools(
 							spanishTitle: csvData?.title_spanish,
 						};
 					})
-					.filter((template) => template.score > 30) // Umbral de relevancia
+					.filter((template) => template.score > 10) // Umbral de relevancia
 					.sort((a, b) => b.score - a.score)
 					.slice(0, limit)
 					.map(({ score, spanishTitle, ...template }) => ({
@@ -437,8 +437,13 @@ export async function registerTemplateResources(server: McpServer) {
  * Esta función NO hace llamadas a API, es instantánea
  */
 export function searchExerciseTemplatesLocal(query: string, limit = 10) {
+	console.log(`🔍 Local search called: "${query}" (limit: ${limit})`);
+
 	const data = loadTemplatesData();
 	const translations = loadCsvTranslations();
+
+	console.log(`📋 Templates loaded: ${data?.exercise_templates?.length || 0}`);
+	console.log(`🌍 Translations loaded: ${translations?.size || 0}`);
 
 	if (!data || data.exercise_templates.length === 0) {
 		return {
@@ -471,13 +476,25 @@ export function searchExerciseTemplatesLocal(query: string, limit = 10) {
 			// Usar el score más alto
 			const finalScore = Math.max(englishScore, spanishScore);
 
+			// Debug para Face Pull específicamente
+			if (template.id === "BE640BA0") {
+				console.log("🎯 Face Pull debug:");
+				console.log(`   - English score: ${englishScore}`);
+				console.log(`   - Spanish score: ${spanishScore}`);
+				console.log(`   - Final score: ${finalScore}`);
+				console.log(`   - Search term: "${searchTerm}"`);
+				console.log(`   - Original term: "${originalTerm}"`);
+				console.log(`   - Template title: "${template.title}"`);
+				console.log(`   - Spanish title: "${csvData?.title_spanish}"`);
+			}
+
 			return {
 				...template,
 				score: finalScore,
 				spanishTitle: csvData?.title_spanish,
 			};
 		})
-		.filter((template) => template.score > 30) // Umbral de relevancia
+		.filter((template) => template.score > 10) // Umbral de relevancia
 		.sort((a, b) => b.score - a.score)
 		.slice(0, limit)
 		.map(({ score, spanishTitle, ...template }) => ({
