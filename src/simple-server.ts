@@ -4,6 +4,15 @@
 // This bypasses all MCP complexity and works directly with GPT requests
 
 import express from "express";
+import {
+	createIdConfusionError,
+	createInvalidExerciseIdError,
+	createInvalidRoutineIdError,
+	formatValidationError,
+	isValidExerciseTemplateId,
+	isValidUUID,
+	validateSets,
+} from "./utils/validation.js";
 
 const app = express();
 app.use(express.json());
@@ -382,7 +391,7 @@ app.post("/mcp", async (req, res) => {
 			});
 		}
 
-		let result: Record<string, unknown>;
+		let result: Record<string, unknown> = {};
 
 		switch (method) {
 			case "help":
@@ -436,6 +445,65 @@ app.post("/mcp", async (req, res) => {
 			}
 
 			case "createRoutine": {
+				// 🛡️ DEFENSIVE VALIDATIONS - Prevent GPT from creating broken routines
+
+				// 1️⃣ Validate that exercises array exists and is not empty
+				if (!Array.isArray(params.exercises) || params.exercises.length === 0) {
+					result = formatValidationError({
+						code: "MISSING_EXERCISES",
+						message:
+							"❌ CRITICAL ERROR: createRoutine REQUIRES exercises array with at least 1 exercise",
+						provided: params.exercises,
+						expected_format:
+							"exercises: [{exerciseTemplateId: 'XXXXXXXX', sets: [{type: 'normal', reps: 10}]}]",
+						suggestion:
+							"NEVER create empty routines - Hevy will add default 'Press banca' exercise automatically",
+						gpt_instructions:
+							"🤖 GPT: ALWAYS include 'exercises' array with valid exercises. Use search-exercise-templates first to get valid IDs.",
+					});
+					break;
+				}
+
+				// 2️⃣ Validate each exercise in the exercises array
+				let validationError = false;
+				for (const [index, exercise] of params.exercises.entries()) {
+					// Validate exerciseTemplateId format
+					if (!isValidExerciseTemplateId(exercise.exerciseTemplateId)) {
+						const error = createInvalidExerciseIdError(
+							exercise.exerciseTemplateId,
+						);
+						error.message = `❌ CRITICAL ERROR: Exercise ${index + 1} has invalid exerciseTemplateId`;
+						error.gpt_instructions += ` (Error in exercise ${index + 1})`;
+						result = formatValidationError(error);
+						validationError = true;
+						break;
+					}
+
+					// Validate sets for this exercise
+					if (exercise.sets) {
+						const setsError = validateSets(exercise.sets);
+						if (setsError) {
+							setsError.message = `❌ CRITICAL ERROR: Exercise ${index + 1} has invalid sets - ${setsError.message}`;
+							setsError.gpt_instructions += ` (Error in exercise ${index + 1})`;
+							result = formatValidationError(setsError);
+							validationError = true;
+							break;
+						}
+					}
+				}
+
+				// If we broke out of the loop due to validation error, don't proceed
+				if (validationError) break;
+
+				console.log("✅ createRoutine validations passed");
+				console.log(`   - title: "${params.title || "Nueva Rutina"}"`);
+				console.log(
+					`   - exercises: ${params.exercises.length} ejercicios válidos`,
+				);
+				console.log(
+					`   - folder: ${params.folderName || params.folder || "default"}`,
+				);
+
 				const routineResult = await hevyClient.createRoutine({
 					title: params.title || "Nueva Rutina",
 					exercises: params.exercises,
@@ -482,13 +550,49 @@ app.post("/mcp", async (req, res) => {
 			}
 
 			case "addExerciseToRoutine": {
-				// First get current routine
+				// 🛡️ DEFENSIVE VALIDATIONS - Prevent GPT from making stupid mistakes
+
+				// 1️⃣ Validate routineId format
+				if (!isValidUUID(params.routineId)) {
+					// Check if GPT is confusing exercise ID with routine ID
+					const error = createIdConfusionError(params.routineId);
+					result = formatValidationError(error);
+					break;
+				}
+
+				// 2️⃣ Validate exerciseTemplateId format
+				if (!isValidExerciseTemplateId(params.exerciseTemplateId)) {
+					const error = createInvalidExerciseIdError(params.exerciseTemplateId);
+					result = formatValidationError(error);
+					break;
+				}
+
+				// 3️⃣ Validate sets array
+				const setsError = validateSets(params.sets);
+				if (setsError) {
+					result = formatValidationError(setsError);
+					break;
+				}
+
+				console.log("✅ Validaciones pasadas - procediendo con la operación");
+				console.log(`   - routineId: ${params.routineId} (✓ UUID válido)`);
+				console.log(
+					`   - exerciseTemplateId: ${params.exerciseTemplateId} (✓ 8 chars válido)`,
+				);
+				console.log(`   - sets: ${params.sets?.length} sets válidos`);
+
+				// First get current routine (now with validated ID)
 				const currentRoutine = await hevyClient.getRoutineById(
 					params.routineId,
 				);
 				if (!currentRoutine?.routine) {
 					result = {
-						error: `Rutina con ID ${params.routineId} no encontrada`,
+						error:
+							`❌ ROUTINE NOT FOUND: La rutina con ID ${params.routineId} no existe en Hevy.\n\n` +
+							"🤖 GPT INSTRUCTIONS:\n" +
+							`1. Llama a 'getRoutines' para obtener IDs válidos\n` +
+							"2. USA EXACTAMENTE el ID que devuelve getRoutines\n" +
+							"3. NO inventes o reutilices IDs antiguos",
 						server: "Railway",
 					};
 					break;
