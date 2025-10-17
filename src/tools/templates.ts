@@ -25,6 +25,12 @@ let templatesData: {
 	};
 } | null = null;
 
+// CSV data for Spanish translations
+let csvTranslations: Map<
+	string,
+	{ id: string; title: string; title_spanish: string }
+> | null = null;
+
 function loadTemplatesData() {
 	if (!templatesData) {
 		try {
@@ -40,6 +46,42 @@ function loadTemplatesData() {
 		}
 	}
 	return templatesData;
+}
+
+function loadCsvTranslations() {
+	if (!csvTranslations) {
+		csvTranslations = new Map();
+		try {
+			const filePath = join(process.cwd(), "templates_hevy_exercises.csv");
+			const fileContent = readFileSync(filePath, "utf8");
+			const lines = fileContent.split("\n").slice(1); // Skip header
+
+			for (const line of lines) {
+				if (!line.trim()) {
+					continue;
+				}
+				// Parse CSV properly handling potential commas in titles
+				const match = line.match(/^([^,]+),([^,]+),(.+)$/);
+				if (match) {
+					const [, id, title, title_spanish] = match;
+					csvTranslations.set(id.trim(), {
+						id: id.trim(),
+						title: title.trim(),
+						title_spanish: title_spanish.trim(),
+					});
+				}
+			}
+			console.log(
+				`✅ Loaded ${csvTranslations.size} Spanish translations from CSV`,
+			);
+		} catch (error) {
+			console.warn(
+				"⚠️  Could not load templates_hevy_exercises.csv:",
+				error instanceof Error ? error.message : error,
+			);
+		}
+	}
+	return csvTranslations;
 }
 
 // Mapeo de nombres en español a inglés
@@ -233,6 +275,7 @@ export function registerTemplateTools(
 		withErrorHandling(
 			async ({ query, limit }: { query: string; limit: number }) => {
 				const data = loadTemplatesData();
+				const translations = loadCsvTranslations();
 
 				if (!data || data.exercise_templates.length === 0) {
 					return createEmptyResponse(
@@ -244,25 +287,38 @@ export function registerTemplateTools(
 				let searchTerm = query.toLowerCase();
 				const originalTerm = searchTerm;
 
-				// Aplicar traducciones
+				// Aplicar traducciones del diccionario (fallback)
 				for (const [es, en] of Object.entries(EXERCISE_NAMES_ES_EN)) {
 					if (searchTerm.includes(es)) {
 						searchTerm = searchTerm.replace(es, en);
 					}
 				}
 
-				// Buscar en el JSON local
+				// Buscar en el JSON local - ahora también buscamos en español usando el CSV
 				const results = data.exercise_templates
-					.map((template) => ({
-						...template,
-						score: fuzzyMatch(searchTerm, template.title),
-					}))
+					.map((template) => {
+						const csvData = translations?.get(template.id);
+						// Calcular score buscando en inglés Y español
+						const englishScore = fuzzyMatch(searchTerm, template.title);
+						const spanishScore = csvData
+							? fuzzyMatch(originalTerm, csvData.title_spanish)
+							: 0;
+						// Usar el score más alto
+						const finalScore = Math.max(englishScore, spanishScore);
+
+						return {
+							...template,
+							score: finalScore,
+							spanishTitle: csvData?.title_spanish,
+						};
+					})
 					.filter((template) => template.score > 30) // Umbral de relevancia
 					.sort((a, b) => b.score - a.score)
 					.slice(0, limit)
-					.map(({ score, ...template }) => ({
+					.map(({ score, spanishTitle, ...template }) => ({
 						id: template.id,
 						title: template.title,
+						spanishTitle: spanishTitle,
 						type: template.type,
 						primaryMuscleGroup: template.primary_muscle_group,
 						equipment: template.equipment,
@@ -292,6 +348,7 @@ export function registerTemplateTools(
 						totalExercises:
 							data.metadata?.total_exercises || data.exercise_templates.length,
 						lastUpdated: data.metadata?.last_updated || "Unknown",
+						spanishTranslationsAvailable: translations ? translations.size : 0,
 					},
 				});
 			},
@@ -324,4 +381,53 @@ export function registerTemplateTools(
 			});
 		}, "get-exercise-templates-info"),
 	);
+}
+
+/**
+ * Register exercise template resources (for LLM to access full catalog on demand)
+ */
+export async function registerTemplateResources(server: McpServer) {
+	const { ListResourcesRequestSchema, ReadResourceRequestSchema } =
+		await import("@modelcontextprotocol/sdk/types.js");
+
+	// List available resources
+	server.setRequestHandler(ListResourcesRequestSchema, async () => ({
+		resources: [
+			{
+				uri: "hevy://exercises/catalog",
+				name: "Exercise Templates Catalog",
+				description:
+					"Complete list of 432 Hevy exercise templates with Spanish translations (id, English name, Spanish name). Use this when you need to see the full catalog to help users find exercises by name.",
+				mimeType: "text/csv",
+			},
+		],
+	}));
+
+	// Read resource content
+	server.setRequestHandler(ReadResourceRequestSchema, async (request) => {
+		const { uri } = request.params;
+
+		if (uri === "hevy://exercises/catalog") {
+			try {
+				const filePath = join(process.cwd(), "templates_hevy_exercises.csv");
+				const csvContent = readFileSync(filePath, "utf8");
+
+				return {
+					contents: [
+						{
+							uri,
+							mimeType: "text/csv",
+							text: csvContent,
+						},
+					],
+				};
+			} catch (error) {
+				throw new Error(
+					`Failed to read exercise catalog: ${error instanceof Error ? error.message : "Unknown error"}`,
+				);
+			}
+		}
+
+		throw new Error(`Unknown resource URI: ${uri}`);
+	});
 }

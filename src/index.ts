@@ -15,7 +15,10 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { name, version } from "../package.json";
 import { registerFolderTools } from "./tools/folders.js";
 import { registerRoutineTools } from "./tools/routines.js";
-import { registerTemplateTools } from "./tools/templates.js";
+import {
+	registerTemplateResources,
+	registerTemplateTools,
+} from "./tools/templates.js";
 import { registerWebhookTools } from "./tools/webhooks.js";
 // Import tool registration functions
 import { registerWorkoutTools } from "./tools/workouts.js";
@@ -52,7 +55,7 @@ const server = new McpServer({
 assertApiKey(cfg.apiKey);
 
 // Configure client
-const apiKey = cfg.apiKey;
+const { apiKey } = cfg;
 const hevyClient = createClient(apiKey, HEVY_API_BASEURL);
 
 // Register all tools
@@ -61,6 +64,9 @@ registerRoutineTools(server, hevyClient);
 registerTemplateTools(server, hevyClient);
 registerFolderTools(server, hevyClient);
 registerWebhookTools(server, hevyClient);
+
+// Register resources (must be awaited)
+await registerTemplateResources(server);
 
 // Start the server
 async function runServer() {

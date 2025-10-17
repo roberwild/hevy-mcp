@@ -7,10 +7,11 @@ El servidor MCP de Hevy utiliza un **catálogo local** de ejercicios almacenado 
 ## ✨ Características
 
 - 🚀 **Búsqueda instantánea** - Sin timeouts, sin límites de rate
-- 🇪🇸 **Soporte bilingüe** - Busca en español o inglés
+- 🇪🇸 **Soporte bilingüe** - Busca en español o inglés usando CSV de traducciones
 - 🔍 **Fuzzy matching** - Encuentra ejercicios incluso con errores tipográficos
 - 💾 **Base de datos local** - ~430 ejercicios disponibles offline
 - 🎯 **Sin paginación** - Devuelve todos los resultados relevantes
+- 📚 **MCP Resource** - Catálogo completo disponible bajo demanda para LLMs
 
 ## 🔧 Métodos Disponibles
 
@@ -41,7 +42,8 @@ Busca ejercicios por nombre en español o inglés usando datos locales.
   "results": [
     {
       "id": "79D0BB3A",
-      "title": "Barbell Bench Press",
+      "title": "Bench Press (Barbell)",
+      "spanishTitle": "Press de banca (barra)",
       "type": "weight_reps",
       "primaryMuscleGroup": "chest",
       "equipment": "barbell",
@@ -51,7 +53,8 @@ Busca ejercicios por nombre en español o inglés usando datos locales.
   "totalResults": 5,
   "catalogInfo": {
     "totalExercises": 432,
-    "lastUpdated": "2025-10-15T20:30:00.000Z"
+    "lastUpdated": "2025-10-15T20:30:00.000Z",
+    "spanishTranslationsAvailable": 432
   }
 }
 ```
@@ -78,6 +81,56 @@ Obtiene información sobre el catálogo local de ejercicios.
   "source": "templates-hevy-exercises.json"
 }
 ```
+
+## 📚 MCP Resource: Catálogo Completo
+
+### ¿Qué es un MCP Resource?
+
+Un MCP Resource es un patrón estándar para exponer datos estáticos que los LLMs pueden leer **bajo demanda**. A diferencia de tools que ejecutan acciones, los resources son datos de referencia.
+
+### `hevy://exercises/catalog`
+
+**URI:** `hevy://exercises/catalog`  
+**Tipo:** `text/csv`  
+**Descripción:** Catálogo completo de 432 ejercicios con traducciones al español
+
+**Cuándo usarlo:**
+- ✅ Cuando necesites ver TODOS los ejercicios disponibles
+- ✅ Cuando quieras filtrar ejercicios por múltiples criterios
+- ✅ Cuando necesites el catálogo completo en la conversación
+
+**Cuándo NO usarlo:**
+- ❌ Para búsquedas específicas (usa `search-exercise-templates`)
+- ❌ En cada conversación (consume ~4,000-5,000 tokens)
+
+**Ejemplo de uso (Claude Desktop):**
+```
+Usuario: "Muéstrame todos los ejercicios de bíceps disponibles"
+
+Claude:
+1. Lee resource: hevy://exercises/catalog
+2. Filtra ejercicios que contengan "bicep" en el nombre
+3. Muestra lista completa al usuario
+```
+
+**Formato del CSV:**
+```csv
+id,title,title_spanish
+3BC06AD3,21s Bicep Curl,Curl de bíceps 21s
+A5AC6449,Bicep Curl (Barbell),Curl de bíceps (barra)
+ADA8623C,Bicep Curl (Cable),Curl de bíceps (cable)
+37FCC2BB,Bicep Curl (Dumbbell),Curl de bíceps (mancuernas)
+...
+```
+
+### Comparación: Tool vs Resource
+
+| Aspecto | `search-exercise-templates` (Tool) | `hevy://exercises/catalog` (Resource) |
+|---------|-----------------------------------|--------------------------------------|
+| **Uso** | Búsquedas específicas | Ver catálogo completo |
+| **Tokens** | ~100 por búsqueda | ~4,000-5,000 |
+| **Cuándo** | 99% de los casos | 1% de los casos |
+| **Ejemplo** | "busca press banca" | "muéstrame todos los ejercicios" |
 
 ## 📚 Traducciones Soportadas
 

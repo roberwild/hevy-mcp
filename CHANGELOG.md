@@ -2,6 +2,18 @@
 
 ### Features
 
+* **search:** Enhanced exercise template search with CSV translations and MCP Resources
+  - 🆕 Added `templates_hevy_exercises.csv` with 431 Spanish translations
+  - 🆕 Improved `searchExerciseTemplates` to search in BOTH English and Spanish simultaneously
+  - 🆕 Results now include `spanishTitle` field for better UX
+  - 🆕 Added MCP Resource `hevy://exercises/catalog` for on-demand full catalog access
+  - 🆕 CSV-based translations provide 100% coverage (431 exercises)
+  - ✅ Maintains backward compatibility with dictionary-based fallback
+  - ✅ Search uses highest score between English and Spanish matches
+  - ✅ Added example script `ejemplo-busqueda-mejorada.js` to demonstrate functionality
+  - 📚 Updated README-TEMPLATES.md with MCP Resource documentation
+  - 📚 Created BUSQUEDA_EJERCICIOS_MEJORADA.md with implementation details
+  
 * **search:** Implemented local exercise template search with Spanish support
   - Added `searchExerciseTemplates` method for instant local searches (no API calls)
   - Bilingual support: search in English or Spanish
