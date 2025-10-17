@@ -1,0 +1,21 @@
+# Render Blueprint for Hevy MCP Server
+# This file defines the infrastructure as code for Render deployment
+
+services:
+  - type: web
+    name: hevy-mcp-production
+    env: docker
+    plan: free
+    region: frankfurt  # EU region for better latency
+    buildCommand: ""   # Docker builds automatically
+    startCommand: ""   # Uses CMD from Dockerfile
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "10000"  # Render default port
+      - key: HEVY_API_KEY
+        sync: false      # Set manually in Render dashboard
+    healthCheckPath: /health
+    domains:
+      - hevy-mcp-render.onrender.com
