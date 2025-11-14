@@ -231,6 +231,42 @@ services:
 - `main` - Latest development build from main branch  
 - `v1.8.8`, `v1.8`, `v1` - Semantic version tags for releases
 
+### Cloud Deployment
+
+#### Koyeb (Recommended - 100% Free)
+
+Deploy to Koyeb with zero cost and no credit card required:
+
+**Features:**
+- ✅ 100% Free - No credit card required
+- ✅ No timeout - App stays active 24/7
+- ✅ 512 MB RAM + 0.1 vCPU
+- ✅ Automatic HTTPS
+- ✅ Auto-deploy from GitHub
+
+**Quick Deploy:**
+1. Sign up at [Koyeb](https://app.koyeb.com/auth/signup)
+2. Click "Create Service" → Select "GitHub"
+3. Select your repository
+4. Configure:
+   - Builder: `Dockerfile`
+   - Environment Variables:
+     - `NODE_ENV=production`
+     - `PORT=8000`
+     - `HEVY_API_KEY=your_key` (mark as secret)
+   - Instance: `Free`
+   - Region: `Frankfurt (fra)`
+   - Health Check: Path `/health`, Port `8000`
+5. Click "Deploy"
+
+See [KOYEB_DEPLOYMENT.md](./KOYEB_DEPLOYMENT.md) for detailed instructions.
+
+#### Other Options
+
+- **Fly.io**: `$5 USD/month` in free credits - See [FLY_DEPLOYMENT_GUIDE.md](./FLY_DEPLOYMENT_GUIDE.md)
+- **Render**: Free tier with 15-min sleep timeout - See [render.yaml](./render.yaml)
+- **Railway**: `$5 USD/month` (no free tier) - See [RAILWAY_DEPLOYMENT.md](./RAILWAY_DEPLOYMENT.md)
+
 ## Available MCP Tools
 
 The server implements the following MCP tools for interacting with the Hevy API:

@@ -1,0 +1,38 @@
+# Koyeb Configuration for Hevy MCP Server
+# https://www.koyeb.com/docs/reference/koyeb-config-file
+
+app:
+  name: hevy-mcp
+
+services:
+  - name: hevy-mcp-server
+    # Docker deployment
+    docker:
+      dockerfile: Dockerfile
+    # Environment variables
+    env:
+      - name: NODE_ENV
+        value: production
+      - name: PORT
+        value: "8000"
+      # Set HEVY_API_KEY as a secret in Koyeb dashboard
+    # Health check
+    health_checks:
+      - http:
+          port: 8000
+          path: /health
+    # Resources - Free tier
+    instance:
+      type: free
+    # Scaling
+    scaling:
+      min: 1
+      max: 1
+    # Ports
+    ports:
+      - port: 8000
+        protocol: http
+    # Regions (closest to Spain)
+    regions:
+      - fra  # Frankfurt
+
