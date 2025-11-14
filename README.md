@@ -259,7 +259,9 @@ Deploy to Koyeb with zero cost and no credit card required:
    - Health Check: Path `/health`, Port `8000`
 5. Click "Deploy"
 
-See [KOYEB_DEPLOYMENT.md](./KOYEB_DEPLOYMENT.md) for detailed instructions.
+📖 **Guías disponibles**:
+- [GUIA_DEPLOYMENT_KOYEB_PASO_A_PASO.md](./GUIA_DEPLOYMENT_KOYEB_PASO_A_PASO.md) - Guía detallada con cada click explicado (5 min)
+- [KOYEB_DEPLOYMENT.md](./KOYEB_DEPLOYMENT.md) - Documentación técnica completa
 
 #### Other Options
 
