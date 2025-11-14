@@ -233,40 +233,34 @@ services:
 
 ### Cloud Deployment
 
-#### Koyeb (Recommended - 100% Free)
+#### Render.com (Recommended - 100% Free, No Credit Card)
 
-Deploy to Koyeb with zero cost and no credit card required:
+Deploy to Render.com with zero cost and no credit card required:
 
 **Features:**
 - ✅ 100% Free - No credit card required
-- ✅ No timeout - App stays active 24/7
-- ✅ 512 MB RAM + 0.1 vCPU
-- ✅ Automatic HTTPS
+- ✅ 750 hours/month free (more than enough)
+- ✅ Automatic HTTPS/SSL
 - ✅ Auto-deploy from GitHub
+- ⚠️ Sleeps after 15 min of inactivity (wakes up in 30-60 sec on first request)
 
 **Quick Deploy:**
-1. Sign up at [Koyeb](https://app.koyeb.com/auth/signup)
-2. Click "Create Service" → Select "GitHub"
-3. Select your repository
-4. Configure:
-   - Builder: `Dockerfile`
-   - Environment Variables:
-     - `NODE_ENV=production`
-     - `PORT=8000`
-     - `HEVY_API_KEY=your_key` (mark as secret)
-   - Instance: `Free`
-   - Region: `Frankfurt (fra)`
-   - Health Check: Path `/health`, Port `8000`
-5. Click "Deploy"
+1. Sign up at [Render.com](https://render.com)
+2. Click "New +" → Select "Blueprint"
+3. Connect GitHub and select your `hevy-mcp` repository
+4. Render detects `render.yaml` automatically
+5. Add environment variable:
+   - `HEVY_API_KEY=your_key`
+6. Click "Apply"
 
 📖 **Guías disponibles**:
-- [GUIA_DEPLOYMENT_KOYEB_PASO_A_PASO.md](./GUIA_DEPLOYMENT_KOYEB_PASO_A_PASO.md) - Guía detallada con cada click explicado (5 min)
-- [KOYEB_DEPLOYMENT.md](./KOYEB_DEPLOYMENT.md) - Documentación técnica completa
+- [GUIA_DEPLOYMENT_RENDER_PASO_A_PASO.md](./GUIA_DEPLOYMENT_RENDER_PASO_A_PASO.md) - Guía detallada con cada click explicado (5 min)
+- [render.yaml](./render.yaml) - Configuración de Blueprint
 
 #### Other Options
 
-- **Fly.io**: `$5 USD/month` in free credits - See [FLY_DEPLOYMENT_GUIDE.md](./FLY_DEPLOYMENT_GUIDE.md)
-- **Render**: Free tier with 15-min sleep timeout - See [render.yaml](./render.yaml)
+- **Fly.io**: `$5 USD/month` in free credits (requires credit card) - See [FLY_DEPLOYMENT_GUIDE.md](./FLY_DEPLOYMENT_GUIDE.md)
+- **Koyeb**: Requires credit card for free tier - See [KOYEB_DEPLOYMENT.md](./KOYEB_DEPLOYMENT.md)
 - **Railway**: `$5 USD/month` (no free tier) - See [RAILWAY_DEPLOYMENT.md](./RAILWAY_DEPLOYMENT.md)
 
 ## Available MCP Tools
