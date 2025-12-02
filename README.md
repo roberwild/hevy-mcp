@@ -5,6 +5,18 @@
 
 A Model Context Protocol (MCP) server implementation that interfaces with the [Hevy fitness tracking app](https://www.hevyapp.com/) and its [API](https://api.hevyapp.com/docs/). This server enables AI assistants to access and manage workout data, routines, exercise templates, and more through the Hevy API (requires PRO subscription).
 
+## 📚 Documentation (Español)
+
+**¿Necesitas la documentación completa en español?**
+
+- 🚀 **[DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)** - Guía completa de deployment en Raspberry Pi
+- ⚡ **[QUICK_DEPLOY.md](QUICK_DEPLOY.md)** - Comandos rápidos para actualizar el servidor
+- 🔐 **[SSH_SETUP_GUIDE.md](SSH_SETUP_GUIDE.md)** - Configurar SSH con GitHub (método PRO)
+- 📝 **[CHEATSHEET.md](CHEATSHEET.md)** - Hoja de referencia rápida
+- 🇪🇸 **[README_ES.md](README_ES.md)** - README completo en español
+
+---
+
 ## Features
 
 - **Workout Management**: Fetch, create, and update workouts
@@ -12,6 +24,7 @@ A Model Context Protocol (MCP) server implementation that interfaces with the [H
 - **Exercise Templates**: Browse available exercise templates
 - **Folder Organization**: Manage routine folders
 - **Webhook Subscriptions**: Create, view, and delete webhook subscriptions for workout events
+- **Search Workouts**: ⭐ NEW - Search workouts by title or description
 
 ## Prerequisites
 
