@@ -2,6 +2,15 @@
 
 ### Features
 
+* **search:** Added `searchWorkouts` method to simple-server
+  - 🆕 Search workouts by title or description text
+  - ✅ Searches across ~15 most recent workouts (pages 1-3)
+  - ✅ Case-insensitive matching
+  - ✅ Returns filtered results with count
+  - 📚 Added deployment documentation (DEPLOYMENT_GUIDE.md, QUICK_DEPLOY.md)
+  - 📚 Added update.sh script for quick deployments
+  - 🤖 GPT can now search workouts: "Busca mis entrenamientos de VivaGym"
+
 * **search:** Enhanced exercise template search with CSV translations and MCP Resources
   - 🆕 Added `templates_hevy_exercises.csv` with 431 Spanish translations
   - 🆕 Improved `searchExerciseTemplates` to search in BOTH English and Spanish simultaneously

@@ -270,6 +270,7 @@ The server implements the following MCP tools for interacting with the Hevy API:
 ### Workout Tools
 - `get-workouts`: Fetch and format workout data
 - `get-workout`: Get a single workout by ID
+- `search-workouts`: Search workouts by title or description ✨ NEW
 - `create-workout`: Create a new workout
 - `update-workout`: Update an existing workout
 - `get-workout-count`: Get the total count of workouts

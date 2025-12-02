@@ -404,6 +404,7 @@ app.post("/mcp", async (req, res) => {
 						"getLastWorkout",
 						"getLastWorkouts",
 						"getWorkouts",
+						"searchWorkouts",
 						"getRoutines",
 						"getRoutineFolders",
 						"createRoutine",
@@ -432,20 +433,60 @@ app.post("/mcp", async (req, res) => {
 				break;
 			}
 
-			case "getWorkouts": {
-				const workoutsData = await hevyClient.getWorkouts({
-					page: params.page || 1,
-					pageSize: params.pageSize || 5,
-				});
+		case "getWorkouts": {
+			const workoutsData = await hevyClient.getWorkouts({
+				page: params.page || 1,
+				pageSize: params.pageSize || 5,
+			});
+			result = {
+				...workoutsData,
+				message: "✅ Entrenamientos obtenidos de Hevy API",
+				server: "Railway",
+			};
+			break;
+		}
+
+		case "searchWorkouts": {
+			const searchQuery = params.query || params.search || "";
+			if (!searchQuery) {
 				result = {
-					...workoutsData,
-					message: "✅ Entrenamientos obtenidos de Hevy API",
+					error: "Se requiere un término de búsqueda (query)",
 					server: "Railway",
 				};
-				break;
+			} else {
+				console.log(`🔍 Buscando entrenamientos: "${searchQuery}"`);
+				
+				// Obtener todos los entrenamientos (página 1-3 para cubrir ~15 entrenamientos)
+				const allWorkouts: any[] = [];
+				for (let page = 1; page <= 3; page++) {
+					const pageData = await hevyClient.makeRequest(`/workouts?page=${page}&pageSize=5`);
+					if (pageData.workouts && pageData.workouts.length > 0) {
+						allWorkouts.push(...pageData.workouts);
+					} else {
+						break; // No more workouts
+					}
+				}
+				
+				// Filtrar por título o descripción
+				const filteredWorkouts = allWorkouts.filter((workout: any) => {
+					const title = (workout.title || "").toLowerCase();
+					const description = (workout.description || "").toLowerCase();
+					const query = searchQuery.toLowerCase();
+					return title.includes(query) || description.includes(query);
+				});
+				
+				result = {
+					workouts: filteredWorkouts,
+					totalCount: filteredWorkouts.length,
+					searchQuery,
+					message: `✅ Encontrados ${filteredWorkouts.length} entrenamientos que contienen "${searchQuery}"`,
+					server: "Railway",
+				};
 			}
+			break;
+		}
 
-			case "createRoutine": {
+		case "createRoutine": {
 				// 🛡️ DEFENSIVE VALIDATIONS - Prevent GPT from creating broken routines
 
 				// 1️⃣ Validate that exercises array exists and is not empty
@@ -749,24 +790,25 @@ app.post("/mcp", async (req, res) => {
 				break;
 			}
 
-			default:
-				result = {
-					message: `Método ${method} recibido pero no implementado aún`,
-					params,
-					server: "Railway Simple HTTP Server",
-					timestamp: new Date().toISOString(),
-					availableMethods: [
-						"help",
-						"getLastWorkout",
-						"getLastWorkouts",
-						"getWorkouts",
-						"getRoutines",
-						"getRoutineFolders",
-						"createRoutine",
-						"getExerciseTemplates",
-						"searchExerciseTemplates",
-					],
-				};
+		default:
+			result = {
+				message: `Método ${method} recibido pero no implementado aún`,
+				params,
+				server: "Railway Simple HTTP Server",
+				timestamp: new Date().toISOString(),
+				availableMethods: [
+					"help",
+					"getLastWorkout",
+					"getLastWorkouts",
+					"getWorkouts",
+					"searchWorkouts",
+					"getRoutines",
+					"getRoutineFolders",
+					"createRoutine",
+					"getExerciseTemplates",
+					"searchExerciseTemplates",
+				],
+			};
 		}
 
 		res.json({
