@@ -8,71 +8,56 @@ on:
 jobs:
   deploy:
     name: Deploy to Production
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     
     steps:
       - name: 🔔 Notify deployment started
-        run: echo "🚀 Starting deployment to Raspberry Pi..."
+        run: echo "🚀 Starting deployment on Raspberry Pi self-hosted runner..."
 
-      - name: 📦 Checkout code
-        uses: actions/checkout@v4
-
-      - name: 🔐 Setup SSH
-        uses: webfactory/ssh-agent@v0.8.0
-        with:
-          ssh-private-key: ${{ secrets.RASPBERRY_SSH_KEY }}
-
-      - name: 📝 Add Raspberry Pi to known hosts
+      - name: 📥 Pull latest changes
         run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H ${{ secrets.RASPBERRY_HOST }} >> ~/.ssh/known_hosts
+          set -e
+          cd ~/hevy-mcp
+          
+          echo "📊 Current commit: $(git rev-parse --short HEAD)"
+          
+          git pull origin main || { echo "❌ Git pull failed!"; exit 1; }
+          
+          echo "✅ New commit: $(git rev-parse --short HEAD)"
 
-      - name: 🚀 Deploy to Raspberry Pi
-        env:
-          RASPBERRY_USER: ${{ secrets.RASPBERRY_USER }}
-          RASPBERRY_HOST: ${{ secrets.RASPBERRY_HOST }}
+      - name: 📦 Install dependencies
         run: |
-          ssh $RASPBERRY_USER@$RASPBERRY_HOST << 'EOF'
-            set -e  # Exit on any error
-            
-            echo "📥 Pulling latest changes..."
-            cd ~/hevy-mcp
-            
-            # Show current commit
-            echo "Current commit: $(git rev-parse --short HEAD)"
-            
-            # Pull changes
-            git pull origin main || { echo "❌ Git pull failed!"; exit 1; }
-            
-            # Show new commit
-            echo "New commit: $(git rev-parse --short HEAD)"
-            
-            echo "📦 Installing dependencies..."
-            npm install || { echo "❌ npm install failed!"; exit 1; }
-            
-            echo "🏗️ Building project..."
-            npm run build || { echo "❌ Build failed!"; exit 1; }
-            
-            echo "♻️ Restarting server..."
-            pm2 restart hevy-mcp || { echo "❌ PM2 restart failed!"; exit 1; }
-            
-            echo "✅ Deployment completed successfully!"
-            echo "📊 Server status:"
-            pm2 status
-            
-            echo ""
-            echo "📋 Server logs (should show new version):"
-            pm2 logs hevy-mcp --lines 15 --nostream
-          EOF
+          cd ~/hevy-mcp
+          npm install || { echo "❌ npm install failed!"; exit 1; }
+
+      - name: 🏗️ Build project
+        run: |
+          cd ~/hevy-mcp
+          npm run build || { echo "❌ Build failed!"; exit 1; }
+
+      - name: ♻️ Restart server
+        run: |
+          cd ~/hevy-mcp
+          pm2 restart hevy-mcp || { echo "❌ PM2 restart failed!"; exit 1; }
+          
+          echo "✅ Deployment completed successfully!"
+          echo ""
+          echo "📊 Server status:"
+          pm2 status
+          
+          echo ""
+          echo "📋 Server logs:"
+          pm2 logs hevy-mcp --lines 15 --nostream
 
       - name: 🧪 Verify deployment
-        env:
-          RASPBERRY_HOST: ${{ secrets.RASPBERRY_HOST }}
         run: |
           echo "⏳ Waiting for server to start..."
-          sleep 5
+          sleep 3
           
-          echo "🔍 Testing health endpoint..."
+          echo "🔍 Testing health endpoint locally..."
+          curl -f http://localhost:3000/health || exit 1
+          
+          echo "🔍 Testing health endpoint from internet..."
           curl -f https://hevy-rober.duckdns.org/health || exit 1
           
           echo "✅ Deployment verified successfully!"
