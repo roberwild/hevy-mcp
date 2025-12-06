@@ -1,0 +1,79 @@
+name: Deploy to Raspberry Pi
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: 🔔 Notify deployment started
+        run: echo "🚀 Starting deployment to Raspberry Pi..."
+
+      - name: 📦 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 🔐 Setup SSH
+        uses: webfactory/ssh-agent@v0.8.0
+        with:
+          ssh-private-key: ${{ secrets.RASPBERRY_SSH_KEY }}
+
+      - name: 📝 Add Raspberry Pi to known hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.RASPBERRY_HOST }} >> ~/.ssh/known_hosts
+
+      - name: 🚀 Deploy to Raspberry Pi
+        env:
+          RASPBERRY_USER: ${{ secrets.RASPBERRY_USER }}
+          RASPBERRY_HOST: ${{ secrets.RASPBERRY_HOST }}
+        run: |
+          ssh $RASPBERRY_USER@$RASPBERRY_HOST << 'EOF'
+            echo "📥 Pulling latest changes..."
+            cd ~/hevy-mcp
+            git pull origin main
+            
+            echo "📦 Installing dependencies..."
+            npm install
+            
+            echo "🏗️ Building project..."
+            npm run build
+            
+            echo "♻️ Restarting server..."
+            pm2 restart hevy-mcp
+            
+            echo "✅ Deployment completed!"
+            pm2 status
+            pm2 logs hevy-mcp --lines 10 --nostream
+          EOF
+
+      - name: 🧪 Verify deployment
+        env:
+          RASPBERRY_HOST: ${{ secrets.RASPBERRY_HOST }}
+        run: |
+          echo "⏳ Waiting for server to start..."
+          sleep 5
+          
+          echo "🔍 Testing health endpoint..."
+          curl -f https://hevy-rober.duckdns.org/health || exit 1
+          
+          echo "✅ Deployment verified successfully!"
+
+      - name: ✅ Deployment Success
+        if: success()
+        run: |
+          echo "🎉 Deployment completed successfully!"
+          echo "🌐 Server: https://hevy-rober.duckdns.org"
+          echo "📊 Health: https://hevy-rober.duckdns.org/health"
+
+      - name: ❌ Deployment Failed
+        if: failure()
+        run: |
+          echo "💥 Deployment failed!"
+          echo "Check the logs above for details."
+          exit 1
+

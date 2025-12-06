@@ -1,8 +1,26 @@
 # ⚡ Quick Deploy Guide
 
-## 🚀 Actualizar Servidor (30 segundos)
+## 🚀 Actualizar Servidor
 
-### Opción 1: Método Rápido (HTTPS)
+### Opción 1: AUTO-DEPLOY ⭐ NUEVO (0 segundos)
+
+**¡Deploy automático al hacer push!**
+
+```bash
+# En tu PC:
+git add .
+git commit -m "nueva feature"
+git push origin main
+
+# ¡YA ESTÁ! GitHub Actions deploya automáticamente
+# Ver progreso: https://github.com/TU_USUARIO/hevy-mcp/actions
+```
+
+**Configuración**: Ver [AUTO_DEPLOY_SETUP.md](AUTO_DEPLOY_SETUP.md)
+
+---
+
+### Opción 2: Método Rápido (30 segundos)
 
 ```bash
 ssh rober@192.168.1.141
@@ -10,7 +28,9 @@ ssh rober@192.168.1.141
 exit
 ```
 
-### Opción 2: Método PRO (SSH - Sin Password)
+---
+
+### Opción 3: Método PRO (SSH - Sin Password)
 
 Si ya configuraste SSH keys con GitHub:
 
@@ -23,8 +43,6 @@ npm run build
 pm2 restart hevy-mcp
 exit
 ```
-
-**¡Listo! No pide contraseña en el `git pull`** 🎉
 
 ---
 

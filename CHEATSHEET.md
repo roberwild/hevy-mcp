@@ -18,6 +18,13 @@ SSH:         ssh rober@192.168.1.141
 
 ## 🚀 Actualizar Servidor
 
+### AUTO-DEPLOY ⭐ (Recomendado)
+```bash
+git push origin main
+# ¡Ya está! GitHub Actions deploya automáticamente
+# Ver: github.com/TU_USUARIO/hevy-mcp/actions
+```
+
 ### Método Rápido
 ```bash
 ssh rober@192.168.1.141
