@@ -1,9 +1,11 @@
 name: Release
 
 on:
-  push:
-    branches:
-      - main
+  # Deshabilitado temporalmente - requiere NPM_TOKEN
+  # push:
+  #   branches:
+  #     - main
+  workflow_dispatch:
 permissions:
   contents: write  # needed to create releases/tags
   packages: write  # needed to push to GHCR in docker-release job
