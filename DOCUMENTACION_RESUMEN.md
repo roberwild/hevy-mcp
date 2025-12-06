@@ -8,8 +8,51 @@ Has creado un servidor MCP completo en producción. Aquí está toda la document
 
 ## 📖 Guías Principales
 
-### 1. 🚀 [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)
-**La guía MÁS COMPLETA del proyecto**
+### 0. 🎯 [SETUP_AUTO_DEPLOY_DESDE_CERO.md](SETUP_AUTO_DEPLOY_DESDE_CERO.md) ⭐ **EMPIEZA AQUÍ**
+**Guía paso a paso para configurar auto-deploy por primera vez**
+
+**Contiene:**
+- ✅ **10 pasos numerados** desde cero hasta deploy funcionando
+- ✅ **Sin errores** - Solo incluye métodos que funcionan al 100%
+- ✅ **Warnings claros** en puntos críticos
+- ✅ **Verificaciones** después de cada paso
+- ✅ **Tiempo estimado:** 45 minutos
+- ✅ **Nivel:** Principiante
+
+**Usa esta guía cuando:**
+- Es tu **primera vez** configurando auto-deploy
+- Quieres **seguir pasos exactos** sin equivocarte
+- Necesitas una **guía a prueba de errores**
+
+---
+
+### 1. 🚀 [AUTO_DEPLOY_COMPLETO.md](AUTO_DEPLOY_COMPLETO.md)
+**Sistema de Auto-Deploy Completado - Documentación Definitiva (Referencia)**
+
+**Contiene:**
+- ✅ **Resumen completo** del sistema auto-deploy
+- ✅ **Arquitectura visual** con diagramas detallados
+- ✅ **Todos los componentes** instalados y configurados (Runner, PM2, Nginx, DuckDNS, SSL)
+- ✅ **Flujo de deployment** paso a paso ilustrado
+- ✅ **Verificación del sistema** completa con todos los comandos
+- ✅ **3 métodos de deploy** (Normal, Hotfix, Rollback)
+- ✅ **Troubleshooting exhaustivo** (5 problemas comunes + soluciones)
+- ✅ **Seguridad** (puertos, credenciales, firewall opcional)
+- ✅ **Mantenimiento** (tareas diarias automáticas, mensuales, backups)
+- ✅ **Monitoreo** en tiempo real
+- ✅ **URLs importantes** y contacto
+
+**Usa esta guía cuando:**
+- Necesites entender **cómo funciona el auto-deploy**
+- Tengas problemas con **GitHub Actions o el Self-Hosted Runner**
+- Quieras hacer **deployments** o **rollbacks**
+- Necesites **diagnosticar** problemas del sistema
+- Quieras **configurar monitoreo** o hacer **mantenimiento**
+
+---
+
+### 2. 🚀 [DEPLOYMENT_GUIDE.md](DEPLOYMENT_GUIDE.md)
+**La guía MÁS COMPLETA del proyecto (Manual + Setup inicial)**
 
 **Contiene:**
 - ✅ Información completa del servidor (IPs, URLs, credenciales)
@@ -32,7 +75,7 @@ Has creado un servidor MCP completo en producción. Aquí está toda la document
 
 ---
 
-### 2. ⚡ [QUICK_DEPLOY.md](QUICK_DEPLOY.md)
+### 3. ⚡ [QUICK_DEPLOY.md](QUICK_DEPLOY.md)
 **Guía rápida para el día a día**
 
 **Contiene:**

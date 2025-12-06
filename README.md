@@ -424,5 +424,35 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 - [Model Context Protocol](https://github.com/modelcontextprotocol) for the MCP SDK
 - [Hevy](https://www.hevyapp.com/) for their fitness tracking platform and API
 
- #   =؀�  A u t o - D e p l o y   C o n f i g u r a d o  
+---
+
+## 🚀 Auto-Deploy to Raspberry Pi
+
+Este proyecto está configurado con **auto-deploy automático** a Raspberry Pi usando GitHub Actions Self-Hosted Runner.
+
+### ✨ Características
+
+- ✅ **Push & Deploy** - Haz `git push` y en 30 segundos está en producción
+- ✅ **HTTPS Seguro** - Certificados SSL automáticos con Let's Encrypt
+- ✅ **Dominio personalizado** - `https://hevy-rober.duckdns.org`
+- ✅ **Zero-downtime** - El servidor se actualiza sin interrupciones
+- ✅ **Auto-start on boot** - Todo arranca automáticamente
+
+### 📖 Documentación Completa
+
+Ver **[AUTO_DEPLOY_COMPLETO.md](./AUTO_DEPLOY_COMPLETO.md)** para:
+- Arquitectura completa del sistema
+- Todos los componentes y configuración
+- Cómo hacer deployments
+- Troubleshooting completo
+- Mantenimiento y monitoreo
+
+### 🎯 URLs
+
+- **Producción:** https://hevy-rober.duckdns.org
+- **Health Check:** https://hevy-rober.duckdns.org/health
+- **GitHub Actions:** https://github.com/roberwild/hevy-mcp/actions
+
+ #   =؀�  A u t o - D e p l o y   C o n f i g u r a d o 
+ 
  
