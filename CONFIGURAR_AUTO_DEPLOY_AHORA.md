@@ -38,7 +38,7 @@ l638TUQUnzgVwTcLlQNhAAAAF2dpdGh1Yi1hY3Rpb25zQGhldnktbWNwAQIDBAUG
 
 1. Click en **"New repository secret"**
 2. **Name**: `RASPBERRY_HOST`
-3. **Secret**: `192.168.1.141`
+3. **Secret**: `192.168.1.210`
 4. Click **"Add secret"**
 
 ### 1.4: Crear Secret 3 - RASPBERRY_USER
@@ -63,7 +63,7 @@ Deberías ver 3 secrets:
 
 ```bash
 # Conectar a la Raspberry Pi
-ssh rober@192.168.1.141
+ssh rober@192.168.1.210
 
 # Añadir la clave pública
 echo 'ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILQlcG/oXwEYyhV4SS/xGv1bl638TUQUnzgVwTcLlQNh github-actions@hevy-mcp' >> ~/.ssh/authorized_keys

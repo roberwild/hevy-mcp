@@ -423,3 +423,6 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 
 - [Model Context Protocol](https://github.com/modelcontextprotocol) for the MCP SDK
 - [Hevy](https://www.hevyapp.com/) for their fitness tracking platform and API
+
+ #   =Ø€Þ  A u t o - D e p l o y   C o n f i g u r a d o  
+ 
