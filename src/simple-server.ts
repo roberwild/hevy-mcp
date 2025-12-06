@@ -32,6 +32,7 @@ console.log("- HEVY_API_KEY:", HEVY_API_KEY ? "***SET***" : "NOT SET");
 console.log("- PORT:", PORT);
 console.log("✨ AUTO-DEPLOY FUNCIONANDO - Versión actualizada automáticamente!");
 console.log("🎯 Deploy con Self-Hosted Runner - Sin SSH necesario!");
+console.log("🔥 Servicio systemd configurado y funcionando!");
 console.log("🎯 Última actualización:", new Date().toISOString());
 
 // Cliente real de Hevy API (copied from api/index.js)
