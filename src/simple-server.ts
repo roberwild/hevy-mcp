@@ -30,6 +30,7 @@ if (!HEVY_API_KEY) {
 console.log("🚀 Starting simple HTTP server for GPT compatibility");
 console.log("- HEVY_API_KEY:", HEVY_API_KEY ? "***SET***" : "NOT SET");
 console.log("- PORT:", PORT);
+console.log("✨ AUTO-DEPLOY FUNCIONANDO - Versión actualizada automáticamente!");
 
 // Cliente real de Hevy API (copied from api/index.js)
 const hevyClient = {
