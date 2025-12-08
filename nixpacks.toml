@@ -1,3 +1,2 @@
-[phases.start]
+[start]
 cmd = "node dist/simple-server.js"
-
