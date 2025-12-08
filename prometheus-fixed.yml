@@ -1,0 +1,41 @@
+# Configuración de Prometheus para Raspberry Pi + Coolify
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: 'raspberry-pi-monitor'
+
+scrape_configs:
+  # Métricas de Prometheus mismo
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Métricas del sistema (CPU, RAM, Disco)
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+        labels:
+          instance: 'raspberry-pi-5'
+
+  # Métricas de contenedores Docker
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+
+  # Traefik (Coolify Proxy) - CORREGIDO
+  - job_name: 'traefik'
+    static_configs:
+      - targets: ['coolify-proxy:8080']
+        labels:
+          service: 'coolify-proxy'
+
+  # Hevy MCP Application - usa /health como endpoint
+  - job_name: 'hevy-mcp'
+    metrics_path: '/health'
+    static_configs:
+      - targets: ['j4w808go4osc0gccok0o0oo0-163723950862:3000']
+        labels:
+          service: 'hevy-mcp'
+          app: 'hevy-mcp'
+
