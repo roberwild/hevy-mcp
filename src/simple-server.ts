@@ -4,6 +4,9 @@
 // This bypasses all MCP complexity and works directly with GPT requests
 
 import express from "express";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
+import { readFileSync } from "fs";
 import { searchExerciseTemplatesLocal } from "./tools/templates.js";
 import {
 	createIdConfusionError,
@@ -14,6 +17,9 @@ import {
 	isValidUUID,
 	validateSets,
 } from "./utils/validation.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
 app.use(express.json());
@@ -372,6 +378,30 @@ const hevyClient = {
 		return result;
 	},
 };
+
+// Root endpoint - Serve Swagger UI
+app.get("/", (_req, res) => {
+	try {
+		const swaggerPath = join(__dirname, "swagger.html");
+		const html = readFileSync(swaggerPath, "utf-8");
+		res.setHeader("Content-Type", "text/html");
+		res.send(html);
+	} catch (error) {
+		res.status(500).send(`
+			<html>
+				<body style="font-family: sans-serif; max-width: 600px; margin: 50px auto; text-align: center;">
+					<h1>🏋️ Hevy MCP API</h1>
+					<p>API funcionando correctamente.</p>
+					<ul style="text-align: left;">
+						<li><a href="/health">Health Check</a></li>
+						<li><a href="/mcp">MCP Endpoint (POST)</a></li>
+					</ul>
+					<p style="color: #999; font-size: 0.9rem;">Documentación Swagger no disponible</p>
+				</body>
+			</html>
+		`);
+	}
+});
 
 // Health check endpoint
 app.get("/health", (_req, res) => {
