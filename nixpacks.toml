@@ -1,0 +1,3 @@
+[phases.start]
+cmd = "node dist/simple-server.js"
+
