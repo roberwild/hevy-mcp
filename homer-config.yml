@@ -1,4 +1,5 @@
 ---
+
 # Homepage configuration
 # See https://github.com/bastienwirtz/homer/blob/main/docs/configuration.md
 
@@ -110,10 +111,9 @@ services:
         url: "https://hevy.roberace.com"
         target: "_blank"
 
-      # Añade más servicios aquí según los vayas creando
-      # - name: "Otra API"
-      #   subtitle: "Descripción"
-      #   tag: "api"
-      #   url: "http://192.168.1.XXX:3002"
-      #   target: "_blank"
-
+      - name: "Buscador de ETFs"
+        logo: "https://www.svgrepo.com/show/354190/nextjs-icon.svg"
+        subtitle: "Buscador de fondos de inversión"
+        tag: "nextjs"
+        url: "https://etfs.roberace.com"
+        target: "_blank"
