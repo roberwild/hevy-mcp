@@ -1,6 +1,6 @@
 # 📘 Guía Completa de Deployment en Coolify
 
-> **Autor:** Roberto Gago Mourente  
+> **Autor:** Roberto Gutiérrez Mourente  
 > **Fecha:** 8 de Diciembre de 2025  
 > **Setup:** Raspberry Pi 5 + Coolify + Traefik + Cloudflare  
 > **Dominio:** roberace.com  
@@ -692,7 +692,7 @@ sudo reboot
 
 **Última actualización:** 8 de Diciembre de 2025  
 **Versión:** 1.0  
-**Mantenido por:** Roberto Gago Mourente
+**Mantenido por:** Roberto Gutiérrez Mourente
 
 **¡Buena suerte con tus próximos deploys! 🚀**
 
